@@ -4,97 +4,104 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>CLN Stats Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f7fa;
-      color: #1a1d29;
+      font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
     .hidden { display: none !important; }
     
-    /* Login Page - Clean professional */
+    /* Login Page - Dark */
     .login-container {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f5f7fa;
+      background: linear-gradient(135deg, #0a0a0a 0%, #141414 50%, #0a0a0a 100%);
     }
     .login-box {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 16px;
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 20px;
       padding: 48px 40px;
       width: 100%;
       max-width: 420px;
       text-align: center;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     }
     .login-logo {
-      font-size: 32px;
+      font-size: 36px;
       font-weight: 700;
-      color: #1a1d29;
+      color: #fafafa;
       margin-bottom: 8px;
+      letter-spacing: -1px;
     }
     .login-subtitle {
-      color: #64748b;
+      color: #737373;
       font-size: 14px;
       margin-bottom: 36px;
       font-weight: 500;
     }
     .login-input {
       width: 100%;
-      background: #f8fafc;
-      border: 1px solid #e5e9f2;
-      color: #1a1d29;
-      padding: 14px 18px;
-      border-radius: 10px;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      color: #fafafa;
+      padding: 16px 20px;
+      border-radius: 12px;
       font-size: 15px;
       margin-bottom: 20px;
       outline: none;
       transition: all 0.2s;
+      font-family: 'Space Grotesk', sans-serif;
     }
     .login-input:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      border-color: #525252;
+      box-shadow: 0 0 0 3px rgba(82, 82, 82, 0.2);
     }
     .login-btn {
       width: 100%;
-      background: #1a1d29;
+      background: #fafafa;
       border: none;
-      color: #fff;
-      padding: 14px;
-      border-radius: 10px;
+      color: #0a0a0a;
+      padding: 16px;
+      border-radius: 12px;
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      font-family: 'Space Grotesk', sans-serif;
     }
     .login-btn:hover {
-      background: #2d3748;
+      background: #e5e5e5;
+      transform: translateY(-1px);
     }
     .login-error {
-      color: #dc2626;
+      color: #ef4444;
       font-size: 13px;
       margin-top: 16px;
       display: none;
-      padding: 10px 16px;
-      background: #fef2f2;
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.1);
       border-radius: 8px;
-      border: 1px solid #fecaca;
+      border: 1px solid rgba(239, 68, 68, 0.2);
     }
     .login-error.show { display: block; }
     .login-hint {
-      color: #94a3b8;
+      color: #525252;
       font-size: 12px;
       margin-top: 24px;
     }
     
-    /* Main App Layout - Sidebar */
+    /* Main App Layout - Sidebar Dark */
     .app-wrapper {
       display: flex;
       min-height: 100vh;
@@ -102,9 +109,9 @@
     
     /* Sidebar */
     .sidebar {
-      width: 260px;
-      background: #ffffff;
-      border-right: 1px solid #e5e9f2;
+      width: 280px;
+      background: #0f0f0f;
+      border-right: 1px solid #1a1a1a;
       display: flex;
       flex-direction: column;
       position: fixed;
@@ -114,63 +121,65 @@
       z-index: 100;
     }
     .sidebar-header {
-      padding: 24px 20px;
-      border-bottom: 1px solid #e5e9f2;
+      padding: 28px 24px;
+      border-bottom: 1px solid #1a1a1a;
     }
     .sidebar-logo {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 20px;
+      gap: 14px;
+      font-size: 22px;
       font-weight: 700;
-      color: #1a1d29;
+      color: #fafafa;
+      letter-spacing: -0.5px;
     }
     .sidebar-logo-icon {
-      width: 36px;
-      height: 36px;
-      background: #1a1d29;
-      border-radius: 10px;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 700;
     }
     .sidebar-nav {
       flex: 1;
-      padding: 16px 12px;
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 10px;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s;
-      color: #64748b;
-      font-size: 14px;
+      color: #737373;
+      font-size: 15px;
       font-weight: 500;
       border: none;
       background: transparent;
       text-align: left;
       width: 100%;
+      font-family: 'Space Grotesk', sans-serif;
     }
     .nav-item:hover {
-      background: #f8fafc;
-      color: #1a1d29;
+      background: #1a1a1a;
+      color: #a3a3a3;
     }
     .nav-item.active {
-      background: #eff6ff;
+      background: #1a1a1a;
       color: #3b82f6;
     }
     .nav-item svg {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       flex-shrink: 0;
     }
     .nav-badge {
@@ -180,40 +189,43 @@
       background: #ef4444;
       border-radius: 50%;
       display: none;
+      box-shadow: 0 0 8px #ef4444;
     }
     .nav-badge.show {
       display: block;
     }
     .sidebar-footer {
-      padding: 16px 20px;
-      border-top: 1px solid #e5e9f2;
+      padding: 20px 24px;
+      border-top: 1px solid #1a1a1a;
     }
     .logout-btn-sidebar {
       display: flex;
       align-items: center;
       gap: 12px;
       width: 100%;
-      padding: 10px 16px;
-      border: 1px solid #e5e9f2;
-      border-radius: 8px;
+      padding: 12px 18px;
+      border: 1px solid #262626;
+      border-radius: 10px;
       background: transparent;
-      color: #64748b;
-      font-size: 13px;
+      color: #737373;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.2s;
+      font-family: 'Space Grotesk', sans-serif;
     }
     .logout-btn-sidebar:hover {
-      background: #fef2f2;
-      border-color: #fecaca;
-      color: #dc2626;
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #ef4444;
     }
     
     /* Main Content */
     .main-content {
       flex: 1;
-      margin-left: 260px;
-      padding: 32px 40px;
+      margin-left: 280px;
+      padding: 40px 48px;
       min-height: 100vh;
+      background: #0a0a0a;
     }
     
     /* Page Header */
@@ -221,129 +233,135 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 32px;
+      margin-bottom: 40px;
     }
     .page-title {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
-      color: #1a1d29;
+      color: #fafafa;
+      letter-spacing: -1px;
     }
     .page-subtitle {
-      color: #64748b;
-      font-size: 14px;
-      margin-top: 4px;
+      color: #737373;
+      font-size: 15px;
+      margin-top: 6px;
+      font-weight: 500;
     }
     .period-tabs {
       display: flex;
       gap: 8px;
-      background: #ffffff;
+      background: #141414;
       padding: 6px;
-      border-radius: 10px;
-      border: 1px solid #e5e9f2;
+      border-radius: 12px;
+      border: 1px solid #1a1a1a;
     }
     .period-tab {
       background: transparent;
       border: none;
-      color: #64748b;
-      padding: 8px 16px;
-      border-radius: 8px;
+      color: #737373;
+      padding: 10px 18px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
       transition: all 0.2s;
+      font-family: 'Space Grotesk', sans-serif;
     }
-    .period-tab:hover { color: #1a1d29; }
+    .period-tab:hover { color: #a3a3a3; }
     .period-tab.active {
-      background: #1a1d29;
-      color: #fff;
+      background: #262626;
+      color: #fafafa;
     }
     
-    /* KPI Cards Grid */
+    /* KPI Cards Grid - Dark */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 24px;
-      margin-bottom: 32px;
+      margin-bottom: 40px;
     }
     @media (max-width: 1200px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 768px) { .kpi-grid { grid-template-columns: 1fr; } }
     
     .kpi-card {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 16px;
-      padding: 24px;
-      transition: all 0.2s;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s;
     }
     .kpi-card:hover {
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      border-color: #262626;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
     .kpi-label {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
-      color: #64748b;
-      margin-bottom: 12px;
+      color: #737373;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .kpi-value-row {
       display: flex;
       align-items: baseline;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
     .kpi-value {
-      font-size: 32px;
+      font-size: 36px;
       font-weight: 700;
-      color: #1a1d29;
-      letter-spacing: -0.5px;
+      color: #fafafa;
+      letter-spacing: -1px;
     }
     .kpi-unit {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
-      color: #64748b;
+      color: #525252;
     }
     .kpi-evolution {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #64748b;
+      gap: 10px;
+      font-size: 14px;
+      color: #737373;
     }
     .evolution-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 12px;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
       font-weight: 600;
     }
     .evolution-badge.up {
-      background: #dcfce7;
-      color: #16a34a;
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
     }
     .evolution-badge.down {
-      background: #fee2e2;
-      color: #dc2626;
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
     }
     .evolution-badge.neutral {
-      background: #f1f5f9;
-      color: #64748b;
+      background: #262626;
+      color: #737373;
     }
     .kpi-comparison {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid #f1f5f9;
-      font-size: 12px;
-      color: #94a3b8;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #1a1a1a;
+      font-size: 13px;
+      color: #525252;
     }
     .kpi-comparison-item {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .kpi-comparison-item:last-child { margin-bottom: 0; }
     
-    /* Chart Cards */
+    /* Chart Cards - Dark */
     .charts-section {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -353,9 +371,9 @@
     @media (max-width: 1024px) { .charts-section { grid-template-columns: 1fr; } }
     
     .chart-card {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 16px;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
       overflow: hidden;
     }
     .chart-card.full-width {
@@ -365,113 +383,114 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 24px;
-      border-bottom: 1px solid #f1f5f9;
+      padding: 24px 28px;
+      border-bottom: 1px solid #1a1a1a;
     }
     .chart-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
-      color: #1a1d29;
+      color: #fafafa;
     }
     .chart-select {
-      background: #f8fafc;
-      border: 1px solid #e5e9f2;
-      color: #64748b;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 13px;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      color: #a3a3a3;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 14px;
       cursor: pointer;
       outline: none;
+      font-family: 'Space Grotesk', sans-serif;
     }
     .chart-select:focus {
       border-color: #3b82f6;
     }
     .chart-body {
-      padding: 24px;
-      height: 300px;
+      padding: 28px;
+      height: 320px;
     }
     
-    /* Content Cards (Messages, Vocal, Membres) */
+    /* Content Cards - Dark */
     .content-card {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 16px;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
       overflow: hidden;
     }
     .content-card-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid #f1f5f9;
+      padding: 24px 28px;
+      border-bottom: 1px solid #1a1a1a;
     }
     .content-card-title {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 600;
-      color: #1a1d29;
+      color: #fafafa;
     }
     .content-card-body {
       padding: 0;
     }
     
-    /* List Items */
+    /* List Items - Dark */
     .list-item {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 16px 24px;
-      border-bottom: 1px solid #f1f5f9;
+      gap: 18px;
+      padding: 18px 28px;
+      border-bottom: 1px solid #1a1a1a;
       transition: background 0.2s;
     }
     .list-item:last-child {
       border-bottom: none;
     }
     .list-item:hover {
-      background: #f8fafc;
+      background: #1a1a1a;
     }
     .list-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 600;
       color: #fff;
-      font-size: 14px;
+      font-size: 15px;
       flex-shrink: 0;
     }
     .list-avatar.green {
-      background: linear-gradient(135deg, #22c55e, #4ade80);
+      background: linear-gradient(135deg, #22c55e, #10b981);
     }
     .list-avatar.purple {
-      background: linear-gradient(135deg, #a855f7, #c084fc);
+      background: linear-gradient(135deg, #a855f7, #ec4899);
     }
     .list-info {
       flex: 1;
     }
     .list-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
-      color: #1a1d29;
-      margin-bottom: 2px;
+      color: #fafafa;
+      margin-bottom: 4px;
     }
     .list-subtitle {
-      font-size: 12px;
-      color: #94a3b8;
+      font-size: 13px;
+      color: #525252;
     }
     .list-value {
       text-align: right;
     }
     .list-value-number {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 700;
-      color: #1a1d29;
+      color: #fafafa;
     }
     .list-value-label {
-      font-size: 12px;
-      color: #94a3b8;
+      font-size: 13px;
+      color: #525252;
     }
     
-    /* Loading State */
+    /* Loading State - Dark */
     .loading-container {
       display: flex;
       flex-direction: column;
@@ -481,52 +500,53 @@
       padding: 40px;
     }
     .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #e5e9f2;
+      width: 44px;
+      height: 44px;
+      border: 3px solid #1a1a1a;
       border-top-color: #3b82f6;
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text {
-      color: #64748b;
-      font-size: 14px;
-      margin-top: 16px;
+      color: #737373;
+      font-size: 15px;
+      margin-top: 20px;
+      font-weight: 500;
     }
     .loading-error {
-      color: #dc2626;
-      font-size: 13px;
-      margin-top: 12px;
-      padding: 10px 16px;
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 8px;
+      color: #ef4444;
+      font-size: 14px;
+      margin-top: 16px;
+      padding: 12px 20px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 10px;
       display: none;
     }
     .loading-error.show { display: block; }
     
-    /* Summary Box */
+    /* Summary Box - Dark */
     .summary-card {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 16px;
-      padding: 24px;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
+      padding: 28px;
       margin-bottom: 24px;
     }
     .summary-title {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 600;
-      color: #1a1d29;
-      margin-bottom: 12px;
+      color: #fafafa;
+      margin-bottom: 14px;
     }
     .summary-text {
-      font-size: 14px;
-      color: #64748b;
-      line-height: 1.7;
+      font-size: 15px;
+      color: #a3a3a3;
+      line-height: 1.8;
     }
     
-    /* Info Cards (Points forts/faibles) */
+    /* Info Cards - Dark */
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -535,44 +555,44 @@
     @media (max-width: 768px) { .info-grid { grid-template-columns: 1fr; } }
     
     .info-card {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 16px;
-      padding: 24px;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
+      padding: 28px;
     }
     .info-card-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     .info-card-title.good {
-      color: #16a34a;
+      color: #22c55e;
     }
     .info-card-title.bad {
-      color: #dc2626;
+      color: #ef4444;
     }
     .info-list {
       list-style: none;
     }
     .info-list li {
-      padding: 10px 0;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 14px;
-      color: #64748b;
+      padding: 12px 0;
+      border-bottom: 1px solid #1a1a1a;
+      font-size: 15px;
+      color: #737373;
     }
     .info-list li:last-child {
       border-bottom: none;
     }
     
-    /* Live Page */
+    /* Live Page - Dark */
     .live-status-card {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 16px;
-      padding: 32px;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
+      padding: 40px;
       text-align: center;
       margin-bottom: 24px;
     }
@@ -580,24 +600,26 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 14px;
+      margin-bottom: 32px;
     }
     .live-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      background: #dc2626;
+      background: #ef4444;
+      box-shadow: 0 0 12px #ef4444;
     }
     .live-dot.online {
       background: #22c55e;
+      box-shadow: 0 0 12px #22c55e;
       animation: pulse 2s infinite;
     }
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     .live-text {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
-      color: #1a1d29;
+      color: #fafafa;
     }
     .live-channels-grid {
       display: grid;
@@ -609,55 +631,61 @@
     @media (max-width: 640px) { .live-channels-grid { grid-template-columns: 1fr; } }
     
     .live-channel-card {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 16px;
-      padding: 32px;
+      background: #0f0f0f;
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
+      padding: 36px;
       text-align: center;
+      transition: all 0.3s;
+    }
+    .live-channel-card:hover {
+      border-color: #262626;
     }
     .live-channel-avatar {
-      width: 80px;
-      height: 80px;
+      width: 88px;
+      height: 88px;
       border-radius: 50%;
       background: linear-gradient(135deg, #ff0050, #00f2ea);
-      margin: 0 auto 20px;
+      margin: 0 auto 24px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
+      font-size: 36px;
+      box-shadow: 0 8px 32px rgba(255, 0, 80, 0.3);
     }
     .live-channel-name {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
-      color: #1a1d29;
-      margin-bottom: 8px;
+      color: #fafafa;
+      margin-bottom: 10px;
     }
     .live-channel-status {
-      font-size: 14px;
-      color: #64748b;
-      margin-bottom: 20px;
+      font-size: 15px;
+      color: #737373;
+      margin-bottom: 24px;
     }
     .live-channel-btn {
       display: inline-block;
       background: #ff0050;
       color: #fff;
-      padding: 12px 24px;
-      border-radius: 10px;
+      padding: 14px 28px;
+      border-radius: 12px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 15px;
       transition: all 0.2s;
     }
     .live-channel-btn:hover {
       background: #e6004c;
+      transform: translateY(-2px);
     }
     .live-channel-btn.offline {
-      background: #f1f5f9;
-      color: #94a3b8;
+      background: #1a1a1a;
+      color: #525252;
       pointer-events: none;
     }
     
-    /* Stats mini grid in card */
+    /* Stats mini grid - Dark */
     .stats-mini-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -665,21 +693,21 @@
       margin-bottom: 24px;
     }
     .stat-mini {
-      background: #ffffff;
-      border: 1px solid #e5e9f2;
-      border-radius: 12px;
-      padding: 20px;
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 16px;
+      padding: 24px;
       text-align: center;
     }
     .stat-mini-label {
-      font-size: 12px;
-      color: #64748b;
-      margin-bottom: 8px;
+      font-size: 13px;
+      color: #737373;
+      margin-bottom: 10px;
     }
     .stat-mini-value {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 700;
-      color: #1a1d29;
+      color: #fafafa;
     }
   </style>
 </head>
@@ -1024,7 +1052,10 @@
   </div>
 
   <script>
-    const RAW = {"generatedAt":1778347775370,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":4},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
+    const RAW = {"generatedAt":1778348370435,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":4},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
+    const cache = new Map();
+    const charts = {};
+    let currentPeriod = '7d';
     
     // Format helpers
     const fmt = {
@@ -1184,7 +1215,7 @@
               pointRadius: 4,
               pointHoverRadius: 8,
               pointBackgroundColor: colC,
-              pointBorderColor: '#0f1419',
+              pointBorderColor: '#0a0a0a',
               pointBorderWidth: 2
             }
           ]
@@ -1203,14 +1234,14 @@
               labels: { 
                 usePointStyle: true, 
                 boxWidth: 8,
-                color: '#94a3b8',
-                font: { size: 12 }
+                color: '#a3a3a3',
+                font: { size: 12, family: "'Space Grotesk', sans-serif" }
               } 
             },
             tooltip: {
-              backgroundColor: 'rgba(21, 25, 34, 0.95)',
-              titleColor: '#e8ecf1',
-              bodyColor: '#94a3b8',
+              backgroundColor: 'rgba(20, 20, 20, 0.95)',
+              titleColor: '#fafafa',
+              bodyColor: '#a3a3a3',
               borderColor: 'rgba(59, 130, 246, 0.3)',
               borderWidth: 1,
               padding: 12,
@@ -1221,12 +1252,12 @@
           scales: { 
             x: { 
               grid: { display: false, drawBorder: false },
-              ticks: { color: '#64748b', font: { size: 11 } }
+              ticks: { color: '#737373', font: { size: 11, family: "'Space Grotesk', sans-serif" } }
             }, 
             y: { 
               beginAtZero: true, 
               grid: { color: "rgba(59, 130, 246, 0.1)", drawBorder: false },
-              ticks: { color: '#64748b', font: { size: 11 } }
+              ticks: { color: '#737373', font: { size: 11, family: "'Space Grotesk', sans-serif" } }
             } 
           }
         }
@@ -1273,7 +1304,7 @@
               pointRadius: 4,
               pointHoverRadius: 6,
               pointBackgroundColor: "#3b82f6",
-              pointBorderColor: "#0f1419",
+              pointBorderColor: "#0a0a0a",
               pointBorderWidth: 2,
               fill: true
             }
@@ -1293,14 +1324,14 @@
               labels: { 
                 usePointStyle: true, 
                 boxWidth: 8,
-                color: '#94a3b8',
-                font: { size: 12 }
+                color: '#a3a3a3',
+                font: { size: 12, family: "'Space Grotesk', sans-serif" }
               } 
             },
             tooltip: {
-              backgroundColor: 'rgba(21, 25, 34, 0.95)',
-              titleColor: '#e8ecf1',
-              bodyColor: '#94a3b8',
+              backgroundColor: 'rgba(20, 20, 20, 0.95)',
+              titleColor: '#fafafa',
+              bodyColor: '#a3a3a3',
               borderColor: 'rgba(59, 130, 246, 0.3)',
               borderWidth: 1,
               padding: 12,
@@ -1311,12 +1342,12 @@
           scales: { 
             x: { 
               grid: { display: false, drawBorder: false },
-              ticks: { color: '#64748b', font: { size: 11 } }
+              ticks: { color: '#737373', font: { size: 11, family: "'Space Grotesk', sans-serif" } }
             }, 
             y: { 
               beginAtZero: true, 
               grid: { color: "rgba(59, 130, 246, 0.1)", drawBorder: false },
-              ticks: { color: '#64748b', font: { size: 11 } }
+              ticks: { color: '#737373', font: { size: 11, family: "'Space Grotesk', sans-serif" } }
             } 
           }
         }
@@ -1360,33 +1391,33 @@
       // Reset state
       loading.classList.remove('hidden');
       content.classList.add('hidden');
-      errorEl.classList.remove('show');
-      prog.style.width = '0%';
+      if (errorEl) errorEl.classList.remove('show');
+      if (prog) prog.style.width = '0%';
       
       // Safety timeout
       const timeoutId = setTimeout(() => {
-        errorEl.classList.add('show');
-        prog.style.width = '100%';
+        if (errorEl) errorEl.classList.add('show');
+        if (prog) prog.style.width = '100%';
       }, PAGE_LOAD_TIMEOUT);
       
       try {
         await new Promise(r => setTimeout(r, 100));
-        prog.style.width = '40%';
+        if (prog) prog.style.width = '40%';
         
         // Use pre-calculated top message users with avatars
         const topUsers = RAW.topMessageUsers || [];
         
         await new Promise(r => setTimeout(r, 150));
-        prog.style.width = '80%';
+        if (prog) prog.style.width = '80%';
         
         list.innerHTML = topUsers.map((user, i) => {
           const initials = (user.username ? user.username.substring(0,2).toUpperCase() : '#'+ (i+1));
-          const avatar = user.avatarURL ? '<img src="' + user.avatarURL + '" style="width:40px;height:40px;border-radius:12px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#a855f7);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px;">' + initials + '</div>';
-          return '<div class="member-item">' + avatar + '<div class="member-info"><div class="member-name">' + escapeHtml(user.username || 'Unknown') + '</div><div class="member-meta">' + (user.userId ? user.userId.substring(0,12) : '') + '...</div></div><div class="member-stats"><div class="member-stat-value">' + (user.count || 0).toLocaleString() + '</div><div class="member-stat-label">messages (7j)</div></div></div>';
-        }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name" style="color:#64748b">Aucune donnée disponible</div></div></div>';
+          const avatar = user.avatarURL ? '<img src="' + user.avatarURL + '" style="width:40px;height:40px;border-radius:14px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:14px;">' + initials + '</div>';
+          return '<div class="list-item">' + avatar + '<div class="list-info"><div class="list-title">' + escapeHtml(user.username || 'Unknown') + '</div><div class="list-subtitle">' + (user.userId ? user.userId.substring(0,12) : '') + '...</div></div><div class="list-value"><div class="list-value-number">' + (user.count || 0).toLocaleString() + '</div><div class="list-value-label">messages (7j)</div></div></div>';
+        }).join('') || '<div class="list-item"><div class="list-info"><div class="list-title" style="color:#525252">Aucune donnée disponible</div></div></div>';
         
         await new Promise(r => setTimeout(r, 150));
-        prog.style.width = '100%';
+        if (prog) prog.style.width = '100%';
         await new Promise(r => setTimeout(r, 150));
         
         clearTimeout(timeoutId);
@@ -1395,8 +1426,8 @@
       } catch (err) {
         clearTimeout(timeoutId);
         console.error('Error loading messages page:', err);
-        errorEl.classList.add('show');
-        prog.style.width = '100%';
+        if (errorEl) errorEl.classList.add('show');
+        if (prog) prog.style.width = '100%';
       }
     }
     
@@ -1411,47 +1442,47 @@
       // Reset state
       loading.classList.remove('hidden');
       content.classList.add('hidden');
-      errorEl.classList.remove('show');
-      prog.style.width = '0%';
+      if (errorEl) errorEl.classList.remove('show');
+      if (prog) prog.style.width = '0%';
       
       // Safety timeout
       const timeoutId = setTimeout(() => {
-        errorEl.classList.add('show');
-        prog.style.width = '100%';
+        if (errorEl) errorEl.classList.add('show');
+        if (prog) prog.style.width = '100%';
       }, PAGE_LOAD_TIMEOUT);
       
       try {
         await new Promise(r => setTimeout(r, 100));
-        prog.style.width = '30%';
+        if (prog) prog.style.width = '30%';
         
         // Use pre-calculated data
         const topUsers = RAW.topVoiceUsers || [];
         const topChannels = RAW.topVoiceChannels || [];
         
         await new Promise(r => setTimeout(r, 150));
-        prog.style.width = '60%';
+        if (prog) prog.style.width = '60%';
         
         // Render top users with avatars
         userList.innerHTML = topUsers.map((user, i) => {
           const hours = Math.round(user.time / 3600000 * 10) / 10;
           const initials = (user.username ? user.username.substring(0,2).toUpperCase() : '#' + (i+1));
-          const avatar = user.avatarURL ? '<img src="' + user.avatarURL + '" style="width:40px;height:40px;border-radius:12px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#a855f7,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px;">' + initials + '</div>';
-          return '<div class="member-item">' + avatar + '<div class="member-info"><div class="member-name">' + escapeHtml(user.username || 'Unknown') + '</div><div class="member-meta">' + (user.userId ? user.userId.substring(0,12) : '') + '...</div></div><div class="member-stats"><div class="member-stat-value">' + hours + 'h</div><div class="member-stat-label">en vocal (7j)</div></div></div>';
-        }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name" style="color:#64748b">Aucune donnée disponible</div></div></div>';
+          const avatar = user.avatarURL ? '<img src="' + user.avatarURL + '" style="width:40px;height:40px;border-radius:14px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#a855f7,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:14px;">' + initials + '</div>';
+          return '<div class="list-item">' + avatar + '<div class="list-info"><div class="list-title">' + escapeHtml(user.username || 'Unknown') + '</div><div class="list-subtitle">' + (user.userId ? user.userId.substring(0,12) : '') + '...</div></div><div class="list-value"><div class="list-value-number">' + hours + 'h</div><div class="list-value-label">en vocal (7j)</div></div></div>';
+        }).join('') || '<div class="list-item"><div class="list-info"><div class="list-title" style="color:#525252">Aucune donnée disponible</div></div></div>';
         
         await new Promise(r => setTimeout(r, 150));
-        prog.style.width = '90%';
+        if (prog) prog.style.width = '90%';
         
         // Render top channels
         if (channelList) {
           channelList.innerHTML = topChannels.map((ch, i) => {
             const hours = Math.round(ch.time / 3600000 * 10) / 10;
-            return '<div class="member-item"><div class="member-avatar" style="background:linear-gradient(135deg,#22c55e,#10b981);">🎙️</div><div class="member-info"><div class="member-name">' + escapeHtml(ch.name || 'Unknown') + '</div><div class="member-meta">Salon vocal #' + (i+1) + '</div></div><div class="member-stats"><div class="member-stat-value">' + hours + 'h</div><div class="member-stat-label">temps total</div></div></div>';
-          }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name" style="color:#64748b">Aucune donnée disponible</div></div></div>';
+            return '<div class="list-item"><div class="list-avatar green">🎙️</div><div class="list-info"><div class="list-title">' + escapeHtml(ch.name || 'Unknown') + '</div><div class="list-subtitle">Salon vocal #' + (i+1) + '</div></div><div class="list-value"><div class="list-value-number">' + hours + 'h</div><div class="list-value-label">temps total</div></div></div>';
+          }).join('') || '<div class="list-item"><div class="list-info"><div class="list-title" style="color:#525252">Aucune donnée disponible</div></div></div>';
         }
         
         await new Promise(r => setTimeout(r, 100));
-        prog.style.width = '100%';
+        if (prog) prog.style.width = '100%';
         await new Promise(r => setTimeout(r, 150));
         
         clearTimeout(timeoutId);
@@ -1460,8 +1491,8 @@
       } catch (err) {
         clearTimeout(timeoutId);
         console.error('Error loading vocal page:', err);
-        errorEl.classList.add('show');
-        prog.style.width = '100%';
+        if (errorEl) errorEl.classList.add('show');
+        if (prog) prog.style.width = '100%';
       }
     }
     
@@ -1475,18 +1506,18 @@
       // Reset state
       loading.classList.remove('hidden');
       content.classList.add('hidden');
-      errorEl.classList.remove('show');
-      prog.style.width = '0%';
+      if (errorEl) errorEl.classList.remove('show');
+      if (prog) prog.style.width = '0%';
       
       // Safety timeout
       const timeoutId = setTimeout(() => {
-        errorEl.classList.add('show');
-        prog.style.width = '100%';
+        if (errorEl) errorEl.classList.add('show');
+        if (prog) prog.style.width = '100%';
       }, PAGE_LOAD_TIMEOUT);
       
       try {
         await new Promise(r => setTimeout(r, 100));
-        prog.style.width = '30%';
+        if (prog) prog.style.width = '30%';
         
         // Calculate stats
         let joins = 0, leaves = 0;
@@ -1496,25 +1527,28 @@
         });
         
         await new Promise(r => setTimeout(r, 150));
-        prog.style.width = '60%';
+        if (prog) prog.style.width = '60%';
         
-        document.getElementById('stat-total-joins').textContent = joins;
-        document.getElementById('stat-total-leaves').textContent = leaves;
-        document.getElementById('stat-current-members').textContent = joins - leaves;
+        const joinsEl = document.getElementById('stat-total-joins');
+        const leavesEl = document.getElementById('stat-total-leaves');
+        const currentEl = document.getElementById('stat-current-members');
+        if (joinsEl) joinsEl.textContent = joins;
+        if (leavesEl) leavesEl.textContent = leaves;
+        if (currentEl) currentEl.textContent = joins - leaves;
         
         // Render member list with avatars
         if (memberListEl) {
           const members = RAW.memberList || [];
           memberListEl.innerHTML = members.map((m, i) => {
             const initials = (m.username ? m.username.substring(0,2).toUpperCase() : '??');
-            const avatar = m.avatarURL ? '<img src="' + m.avatarURL + '" style="width:40px;height:40px;border-radius:12px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3b82f6,#22c55e);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px;">' + initials + '</div>';
+            const avatar = m.avatarURL ? '<img src="' + m.avatarURL + '" style="width:40px;height:40px;border-radius:14px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#22c55e);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:14px;">' + initials + '</div>';
             const joinDate = m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('fr-FR') : 'Inconnu';
-            return '<div class="member-item">' + avatar + '<div class="member-info"><div class="member-name">' + escapeHtml(m.username || 'Unknown') + '</div><div class="member-meta">ID: ' + (m.userId ? m.userId.substring(0,12) : '...') + ' - Join: ' + joinDate + '</div></div><div class="member-stats"><div class="member-stat-value">' + (m.userId ? m.userId.substring(0,6) : '') + '</div><div class="member-stat-label">User ID</div></div></div>';
-          }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name" style="color:#64748b">Aucun membre trouvé</div></div></div>';
+            return '<div class="list-item">' + avatar + '<div class="list-info"><div class="list-title">' + escapeHtml(m.username || 'Unknown') + '</div><div class="list-subtitle">ID: ' + (m.userId ? m.userId.substring(0,12) : '...') + ' - Join: ' + joinDate + '</div></div><div class="list-value"><div class="list-value-number">' + (m.userId ? m.userId.substring(0,6) : '') + '</div><div class="list-value-label">User ID</div></div></div>';
+          }).join('') || '<div class="list-item"><div class="list-info"><div class="list-title" style="color:#525252">Aucun membre trouvé</div></div></div>';
         }
         
         await new Promise(r => setTimeout(r, 150));
-        prog.style.width = '100%';
+        if (prog) prog.style.width = '100%';
         await new Promise(r => setTimeout(r, 150));
         
         clearTimeout(timeoutId);
@@ -1523,8 +1557,8 @@
       } catch (err) {
         clearTimeout(timeoutId);
         console.error('Error loading membres page:', err);
-        errorEl.classList.add('show');
-        prog.style.width = '100%';
+        if (errorEl) errorEl.classList.add('show');
+        if (prog) prog.style.width = '100%';
       }
     }
     
@@ -1619,15 +1653,34 @@
           data: {
             labels: labels,
             datasets: [
-              { label: '@clnprime', data: clnData, backgroundColor: '#ff005080', borderColor: '#ff0050', borderWidth: 1 },
-              { label: '@aladintk7', data: aladinData, backgroundColor: '#00f2ea80', borderColor: '#00f2ea', borderWidth: 1 }
+              { label: '@clnprime', data: clnData, backgroundColor: 'rgba(255, 0, 80, 0.7)', borderColor: '#ff0050', borderWidth: 1, borderRadius: 4 },
+              { label: '@aladintk7', data: aladinData, backgroundColor: 'rgba(0, 242, 234, 0.7)', borderColor: '#00f2ea', borderWidth: 1, borderRadius: 4 }
             ]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'top', align: 'end' } },
-            scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, grid: { color: '#1e1e2e' }, title: { display: true, text: 'Heures de live' } } }
+            plugins: { 
+              legend: { 
+                position: 'top', 
+                align: 'end',
+                labels: { color: '#a3a3a3', font: { family: "'Space Grotesk', sans-serif" } }
+              } 
+            },
+            scales: { 
+              x: { 
+                stacked: true, 
+                grid: { display: false },
+                ticks: { color: '#737373', font: { family: "'Space Grotesk', sans-serif" } }
+              }, 
+              y: { 
+                stacked: true, 
+                beginAtZero: true, 
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: { color: '#737373', font: { family: "'Space Grotesk', sans-serif" } },
+                title: { display: true, text: 'Heures de live', color: '#737373' }
+              } 
+            }
           }
         });
       }
@@ -1647,14 +1700,19 @@
             datasets: [{
               data: [Math.round(clnTotal/3600000*10)/10, Math.round(aladinTotal/3600000*10)/10],
               backgroundColor: ['#ff0050', '#00f2ea'],
-              borderColor: '#111118',
+              borderColor: '#141414',
               borderWidth: 2
             }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'right' } }
+            plugins: { 
+              legend: { 
+                position: 'right',
+                labels: { color: '#a3a3a3', font: { family: "'Space Grotesk', sans-serif" } }
+              } 
+            }
           }
         });
       }
