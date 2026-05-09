@@ -3,382 +3,314 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stats serveur - cette semaine</title>
+  <title>Stats serveur - depuis le debut</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    :root {
-      color-scheme: dark;
-      --bg-primary: #0f0f1a;
-      --bg-secondary: #16162a;
-      --bg-card: #1e1e3f;
-      --bg-navbar: #0a0a14;
-      --text-primary: #f1f5f9;
-      --text-secondary: #94a3b8;
-      --accent-blue: #3b82f6;
-      --accent-green: #10b981;
-      --accent-red: #ef4444;
-      --accent-purple: #8b5cf6;
-      --accent-orange: #f59e0b;
-      --border-color: #2d2d4a;
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0f;
+      color: #e2e8f0;
       min-height: 100vh;
     }
-
-    /* Navbar */
     .navbar {
-      background: var(--bg-navbar);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0 24px;
+      background: #111118;
+      border-bottom: 1px solid #1e1e2e;
+      padding: 0 20px;
       position: sticky;
       top: 0;
       z-index: 100;
     }
-    .navbar-content {
+    .navbar-inner {
       max-width: 1400px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 64px;
+      height: 60px;
     }
-    .navbar-brand {
+    .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 20px;
+      gap: 10px;
+      font-size: 18px;
       font-weight: 700;
-      color: var(--text-primary);
+      color: #60a5fa;
     }
-    .navbar-brand svg {
-      width: 32px;
-      height: 32px;
-      color: var(--accent-blue);
-    }
-    .navbar-links {
+    .nav-links {
       display: flex;
-      gap: 8px;
+      gap: 4px;
     }
-    .navbar-links a {
-      color: var(--text-secondary);
+    .nav-links a {
+      color: #94a3b8;
       text-decoration: none;
-      padding: 8px 16px;
-      border-radius: 8px;
+      padding: 8px 14px;
+      border-radius: 6px;
       font-size: 14px;
       font-weight: 500;
-      transition: all 0.2s ease;
     }
-    .navbar-links a:hover, .navbar-links a.active {
-      color: var(--text-primary);
-      background: var(--bg-card);
+    .nav-links a:hover, .nav-links a.active {
+      color: #e2e8f0;
+      background: #1e1e2e;
     }
-
-    /* Main Container */
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 24px 20px;
     }
-
-    /* Header Section */
-    .header-section {
+    .header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 32px;
+      align-items: center;
+      margin-bottom: 24px;
       flex-wrap: wrap;
       gap: 16px;
     }
-    .header-title h1 {
-      font-size: 32px;
+    h1 {
+      font-size: 28px;
       font-weight: 800;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #f8fafc;
     }
-    .header-subtitle {
-      color: var(--text-secondary);
-      font-size: 15px;
+    .subtitle {
+      color: #64748b;
+      font-size: 14px;
+      margin-top: 4px;
     }
     .live-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--accent-green);
-      padding: 4px 12px;
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      padding: 4px 10px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
-      margin-left: 12px;
+      margin-left: 10px;
     }
     .live-badge::before {
       content: '';
       width: 6px;
       height: 6px;
-      background: var(--accent-green);
+      background: #22c55e;
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* Period Selector */
-    .period-selector {
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    
+    .period-tabs {
       display: flex;
-      gap: 8px;
-      background: var(--bg-secondary);
+      gap: 2px;
+      background: #111118;
       padding: 4px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      border: 1px solid #1e1e2e;
     }
-    .period-btn {
+    .period-tab {
       background: transparent;
       border: none;
-      color: var(--text-secondary);
+      color: #64748b;
       padding: 8px 16px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 13px;
       font-weight: 500;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
-    .period-btn:hover {
-      color: var(--text-primary);
+    .period-tab:hover { color: #e2e8f0; }
+    .period-tab.active {
+      background: #1e1e2e;
+      color: #e2e8f0;
     }
-    .period-btn.active {
-      background: var(--bg-card);
-      color: var(--text-primary);
-    }
-
-    /* KPI Cards Grid */
-    .kpi-grid {
+    
+    .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
       margin-bottom: 24px;
     }
-    .kpi-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 24px;
-      transition: all 0.3s ease;
+    @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .stats-grid { grid-template-columns: 1fr; } }
+    
+    .stat-card {
+      background: #111118;
+      border: 1px solid #1e1e2e;
+      border-radius: 12px;
+      padding: 20px;
       position: relative;
       overflow: hidden;
     }
-    .kpi-card::before {
+    .stat-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent-color, var(--accent-blue)), transparent);
+      height: 2px;
+      background: var(--accent, #3b82f6);
     }
-    .kpi-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent-color, var(--border-color));
-    }
-    .kpi-card.messages { --accent-color: var(--accent-blue); }
-    .kpi-card.voice { --accent-color: var(--accent-purple); }
-    .kpi-card.members { --accent-color: var(--accent-green); }
-    .kpi-card.score { --accent-color: #10b981; }
-
-    .kpi-header {
+    .stat-card.blue { --accent: #3b82f6; }
+    .stat-card.purple { --accent: #a855f7; }
+    .stat-card.green { --accent: #22c55e; }
+    .stat-card.orange { --accent: #94a3b8; }
+    
+    .stat-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      align-items: center;
+      margin-bottom: 12px;
     }
-    .kpi-label {
-      font-size: 13px;
+    .stat-label {
+      font-size: 12px;
       font-weight: 600;
-      color: var(--text-secondary);
+      color: #64748b;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .kpi-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
+    .stat-icon {
+      font-size: 18px;
     }
-    .kpi-icon.messages { background: rgba(59, 130, 246, 0.15); }
-    .kpi-icon.voice { background: rgba(139, 92, 246, 0.15); }
-    .kpi-icon.members { background: rgba(16, 185, 129, 0.15); }
-    .kpi-icon.score { background: rgba(16, 185, 129, 0.15); }
-
-    .kpi-value {
-      font-size: 36px;
+    .stat-value {
+      font-size: 32px;
       font-weight: 800;
+      color: #f8fafc;
       margin-bottom: 8px;
-      color: var(--text-primary);
     }
-    .kpi-delta {
+    .stat-delta {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 14px;
+      font-size: 13px;
+      color: #64748b;
     }
-    .delta-badge {
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 12px;
+    .badge {
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
       font-weight: 600;
     }
-    .delta-badge.positive {
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--accent-green);
+    .badge.up {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
     }
-    .delta-badge.negative {
+    .badge.down {
       background: rgba(239, 68, 68, 0.15);
-      color: var(--accent-red);
+      color: #ef4444;
     }
-    .delta-badge.neutral {
-      background: rgba(148, 163, 184, 0.15);
-      color: var(--text-secondary);
+    .badge.neutral {
+      background: rgba(100, 116, 139, 0.15);
+      color: #64748b;
     }
-
-    /* Charts Section */
-    .charts-grid {
+    
+    .charts-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 16px;
     }
-    @media (max-width: 1024px) {
-      .charts-grid { grid-template-columns: 1fr; }
+    @media (max-width: 1024px) { .charts-row { grid-template-columns: 1fr; } }
+    
+    .chart-box {
+      background: #111118;
+      border: 1px solid #1e1e2e;
+      border-radius: 12px;
+      padding: 20px;
     }
-    .chart-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 24px;
-    }
-    .chart-card.full-width {
+    .chart-box.full {
       grid-column: 1 / -1;
     }
-    .chart-header {
+    .chart-header-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      align-items: center;
+      margin-bottom: 16px;
     }
     .chart-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      color: var(--text-primary);
+      color: #e2e8f0;
     }
-    .chart-select {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
+    select.chart-select {
+      background: #1e1e2e;
+      border: 1px solid #2d2d3d;
+      color: #e2e8f0;
       padding: 6px 12px;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 13px;
       cursor: pointer;
     }
-    .chart-container {
+    .chart-area {
+      height: 260px;
       position: relative;
-      height: 280px;
     }
-
-    /* Analysis Section */
-    .analysis-section {
+    
+    .info-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-top: 16px;
     }
-    @media (max-width: 768px) {
-      .analysis-section { grid-template-columns: 1fr; }
-      .header-section { flex-direction: column; }
+    @media (max-width: 768px) { .info-section { grid-template-columns: 1fr; } }
+    
+    .info-card {
+      background: #111118;
+      border: 1px solid #1e1e2e;
+      border-radius: 12px;
+      padding: 20px;
     }
-    .analysis-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 24px;
-    }
-    .analysis-card h3 {
-      font-size: 16px;
+    .info-card h3 {
+      font-size: 14px;
       font-weight: 700;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-    .analysis-card.strengths h3 { color: var(--accent-green); }
-    .analysis-card.weaknesses h3 { color: var(--accent-red); }
-    .analysis-list {
+    .info-card.good h3 { color: #22c55e; }
+    .info-card.bad h3 { color: #ef4444; }
+    .info-card ul {
       list-style: none;
     }
-    .analysis-list li {
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border-color);
+    .info-card li {
+      padding: 8px 0;
+      border-bottom: 1px solid #1e1e2e;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    .info-card li:last-child { border-bottom: none; }
+    
+    .summary-box {
+      background: linear-gradient(135deg, #111118 0%, #16161f 100%);
+      border: 1px solid #1e1e2e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 16px;
       font-size: 14px;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .analysis-list li:last-child { border-bottom: none; }
-    .analysis-list li::before {
-      content: '→';
-      color: var(--accent-color);
-      font-weight: bold;
-    }
-    .analysis-card.strengths { --accent-color: var(--accent-green); }
-    .analysis-card.weaknesses { --accent-color: var(--accent-red); }
-
-    /* Summary Card */
-    .summary-card {
-      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-    .summary-text {
-      font-size: 15px;
+      color: #94a3b8;
       line-height: 1.6;
-      color: var(--text-secondary);
     }
-
-    /* Footer */
-    .footer {
+    
+    footer {
       text-align: center;
       padding: 24px;
-      color: var(--text-secondary);
-      font-size: 13px;
-      border-top: 1px solid var(--border-color);
-      margin-top: 32px;
+      color: #475569;
+      font-size: 12px;
+      border-top: 1px solid #1e1e2e;
+      margin-top: 24px;
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <div class="navbar-content">
-      <div class="navbar-brand">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div class="navbar-inner">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 3v18h18"/>
           <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
         </svg>
         CLN Stats
       </div>
-      <div class="navbar-links">
+      <div class="nav-links">
         <a href="#" class="active">Dashboard</a>
         <a href="#">Messages</a>
         <a href="#">Vocal</a>
@@ -388,75 +320,75 @@
   </nav>
 
   <div class="container">
-    <div class="header-section">
-      <div class="header-title">
+    <div class="header">
+      <div>
         <h1>Dashboard Global</h1>
-        <p class="header-subtitle">
-          Comparaison cette semaine vs semaine derniere
+        <div class="subtitle">
+          Comparaison depuis le debut vs periode precedente
           <span class="live-badge">LIVE</span>
-        </p>
-      </div>
-      <div class="period-selector">
-        <button class="period-btn" data-period="24h">24h</button>
-        <button class="period-btn active" data-period="7d">7 jours</button>
-        <button class="period-btn" data-period="30d">30 jours</button>
-        <button class="period-btn" data-period="90d">90 jours</button>
-        <button class="period-btn" data-period="all">Tout</button>
-      </div>
-    </div>
-
-    <div class="kpi-grid">
-      <div class="kpi-card messages">
-        <div class="kpi-header">
-          <span class="kpi-label">Messages</span>
-          <div class="kpi-icon messages">💬</div>
-        </div>
-        <div class="kpi-value" id="kpiMessages">5</div>
-        <div class="kpi-delta">
-          <span class="delta-badge" id="kpiMessagesBadge">--</span>
-          <span id="kpiMessagesText">vs periode precedente</span>
         </div>
       </div>
-      <div class="kpi-card voice">
-        <div class="kpi-header">
-          <span class="kpi-label">Vocal Cumule</span>
-          <div class="kpi-icon voice">🎙️</div>
-        </div>
-        <div class="kpi-value" id="kpiVoice">0 min</div>
-        <div class="kpi-delta">
-          <span class="delta-badge" id="kpiVoiceBadge">--</span>
-          <span id="kpiVoiceText">vs periode precedente</span>
-        </div>
-      </div>
-      <div class="kpi-card members">
-        <div class="kpi-header">
-          <span class="kpi-label">Membres (net)</span>
-          <div class="kpi-icon members">👥</div>
-        </div>
-        <div class="kpi-value" id="kpiMembers">+1</div>
-        <div class="kpi-delta">
-          <span class="delta-badge" id="kpiMembersBadge">--</span>
-          <span id="kpiMembersText">vs periode precedente</span>
-        </div>
-      </div>
-      <div class="kpi-card score">
-        <div class="kpi-header">
-          <span class="kpi-label">Score Global</span>
-          <div class="kpi-icon score">⭐</div>
-        </div>
-        <div class="kpi-value" id="kpiScore" style="color: #10b981">+185</div>
-        <div class="kpi-delta">
-          <span class="delta-badge" id="kpiScoreBadge">--</span>
-          <span id="kpiScoreText">Indice global</span>
-        </div>
+      <div class="period-tabs">
+        <button class="period-tab" data-period="24h">24h</button>
+        <button class="period-tab active" data-period="7d">7 jours</button>
+        <button class="period-tab" data-period="30d">30 jours</button>
+        <button class="period-tab" data-period="90d">90 jours</button>
+        <button class="period-tab" data-period="all">Tout</button>
       </div>
     </div>
 
-    <div class="charts-grid">
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3 class="chart-title">Evolution des Messages</h3>
-          <select class="chart-select" id="messagesPeriodSelect">
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-header">
+          <span class="stat-label">Messages</span>
+          <span class="stat-icon">💬</span>
+        </div>
+        <div class="stat-value" id="kpi-messages">5</div>
+        <div class="stat-delta">
+          <span class="badge" id="badge-messages">--</span>
+          <span>vs periode precedente</span>
+        </div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-header">
+          <span class="stat-label">Vocal Cumule</span>
+          <span class="stat-icon">🎙️</span>
+        </div>
+        <div class="stat-value" id="kpi-voice">1 min</div>
+        <div class="stat-delta">
+          <span class="badge" id="badge-voice">--</span>
+          <span>vs periode precedente</span>
+        </div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-header">
+          <span class="stat-label">Membres (net)</span>
+          <span class="stat-icon">👥</span>
+        </div>
+        <div class="stat-value" id="kpi-members">+1</div>
+        <div class="stat-delta">
+          <span class="badge" id="badge-members">--</span>
+          <span>vs periode precedente</span>
+        </div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-header">
+          <span class="stat-label">Score Global</span>
+          <span class="stat-icon">⭐</span>
+        </div>
+        <div class="stat-value" id="kpi-score" style="color: #94a3b8">undefined</div>
+        <div class="stat-delta">
+          <span class="badge" id="badge-score">--</span>
+          <span>Indice global</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-box">
+        <div class="chart-header-row">
+          <span class="chart-title">Evolution des Messages</span>
+          <select id="sel-messages" class="chart-select">
             <option value="24h">24h</option>
             <option value="7d" selected>7 jours</option>
             <option value="30d">30 jours</option>
@@ -464,14 +396,12 @@
             <option value="all">Tout</option>
           </select>
         </div>
-        <div class="chart-container">
-          <canvas id="messagesChart"></canvas>
-        </div>
+        <div class="chart-area"><canvas id="chart-messages"></canvas></div>
       </div>
-      <div class="chart-card">
-        <div class="chart-header">
-          <h3 class="chart-title">Activite Vocal</h3>
-          <select class="chart-select" id="voicePeriodSelect">
+      <div class="chart-box">
+        <div class="chart-header-row">
+          <span class="chart-title">Activite Vocal</span>
+          <select id="sel-voice" class="chart-select">
             <option value="24h">24h</option>
             <option value="7d" selected>7 jours</option>
             <option value="30d">30 jours</option>
@@ -479,398 +409,267 @@
             <option value="all">Tout</option>
           </select>
         </div>
-        <div class="chart-container">
-          <canvas id="voiceChart"></canvas>
-        </div>
-      </div>
-      <div class="chart-card full-width">
-        <div class="chart-header">
-          <h3 class="chart-title">Evolution des Membres (Joins / Leaves)</h3>
-          <select class="chart-select" id="membersPeriodSelect">
-            <option value="24h">24h</option>
-            <option value="7d" selected>7 jours</option>
-            <option value="30d">30 jours</option>
-            <option value="90d">90 jours</option>
-            <option value="all">Tout</option>
-          </select>
-        </div>
-        <div class="chart-container">
-          <canvas id="membersChart"></canvas>
-        </div>
+        <div class="chart-area"><canvas id="chart-voice"></canvas></div>
       </div>
     </div>
 
-    <div class="summary-card">
-      <p class="summary-text" id="analysisSummary">Le serveur progresse globalement (+100% d&#39;activite combinee). Les indicateurs positifs dominent.</p>
+    <div class="chart-box full">
+      <div class="chart-header-row">
+        <span class="chart-title">Evolution des Membres (Joins / Leaves)</span>
+        <select id="sel-members" class="chart-select">
+          <option value="24h">24h</option>
+          <option value="7d" selected>7 jours</option>
+          <option value="30d">30 jours</option>
+          <option value="90d">90 jours</option>
+          <option value="all">Tout</option>
+        </select>
+      </div>
+      <div class="chart-area"><canvas id="chart-members"></canvas></div>
     </div>
 
-    <div class="analysis-section">
-      <div class="analysis-card strengths">
+    <div class="summary-box" id="summary-text">Analyse depuis le debut de l&#39;enregistrement. Il n&#39;y a pas de periode precedente pour comparer.</div>
+
+    <div class="info-section">
+      <div class="info-card good">
         <h3>Points Forts</h3>
-        <ul class="analysis-list" id="strengthList">
-          <li>Messages: +5 messages (+100%), +3 actif(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li>
+        <ul id="list-good">
+          <li>Messages: 5 message(s) envoyes par 3 personne(s).</li><li>Vocal: 1 min cumules par 1 personne(s).</li><li>Membres: solde positif ou stable (+1).</li>
         </ul>
       </div>
-      <div class="analysis-card weaknesses">
+      <div class="info-card bad">
         <h3>Points a Ameliorer</h3>
-        <ul class="analysis-list" id="weaknessList">
-          <li>Aucun point faible net sur cette periode.</li>
+        <ul id="list-bad">
+          <li>Aucun point faible detecte.</li>
         </ul>
       </div>
     </div>
   </div>
 
-  <div class="footer">
-    <p>CLN Bot Stats Dashboard - Mis a jour automatiquement</p>
-  </div>
+  <footer>CLN Bot Stats Dashboard - Mis a jour automatiquement</footer>
 
   <script>
-    const RAW = {"generatedAt":1778338195440,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398},{"userId":"1465491025421144268","channelId":"1481302669296537660","timestamp":1778337721230}],"voiceSessions":[]};
-    const dataCache = new Map();
-    const chartInstances = new Map();
+    const RAW = {"generatedAt":1778338437772,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398},{"userId":"1465491025421144268","channelId":"1481302669296537660","timestamp":1778337721230}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}]};
+    const cache = new Map();
+    const charts = {};
 
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.borderColor = '#2d2d4a';
-    Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+    const fmt = {
+      sign: v => (v >= 0 ? "+" : "") + Math.round(v),
+      pct: (c, p) => {
+        if (p === 0) return c === 0 ? "0%" : "+100%";
+        const v = ((c - p) / p) * 100;
+        return (v >= 0 ? "+" : "") + Math.round(v) + "%";
+      },
+      cls: (c, p) => {
+        if (p === 0) return c > 0 ? "up" : "neutral";
+        return ((c - p) / p) > 0 ? "up" : "down";
+      },
+      dur: ms => {
+        const m = Math.max(0, Math.round(ms / 60000));
+        const h = Math.floor(m / 60);
+        return h > 0 ? h + "h " + String(m % 60).padStart(2, "0") + "m" : m + " min";
+      }
+    };
 
-    function formatSigned(v) { return (v >= 0 ? "+" : "") + Math.round(v); }
-    function pct(current, previous) {
-      if (previous === 0) return current === 0 ? 0 : 100;
-      return ((current - previous) / previous) * 100;
-    }
-    function fmtPct(current, previous) {
-      const p = pct(current, previous);
-      return (p >= 0 ? "+" : "") + Math.round(p) + "%";
-    }
-    function getDeltaClass(current, previous) {
-      const p = pct(current, previous);
-      return p > 0 ? 'positive' : p < 0 ? 'negative' : 'neutral';
-    }
-    function fmtDurationMs(ms) {
-      const mins = Math.max(0, Math.round(ms / 60000));
-      const h = Math.floor(mins / 60);
-      const m = mins % 60;
-      return h > 0 ? h + "h " + String(m).padStart(2, "0") + "m" : m + " min";
-    }
-    function getPeriodCfg(period, now) {
+    function getCfg(period, now) {
       const day = 86400000;
-      if (period === "24h") return { start: now - day, step: 3600000, label: "24h" };
-      if (period === "7d") return { start: now - 7 * day, step: day, label: "7j" };
-      if (period === "30d") return { start: now - 30 * day, step: day, label: "30j" };
-      if (period === "90d") return { start: now - 90 * day, step: 7 * day, label: "90j" };
-      const minTs = Math.min(...RAW.memberEvents.map((e) => e.timestamp), ...RAW.messageEvents.map((e) => e.timestamp), now - 30 * day);
-      const duration = Math.max(day, now - minTs);
-      return { start: minTs, step: Math.max(day, Math.ceil(duration / 45 / day) * day), label: "all" };
+      if (period === "24h") return { start: now - day, step: 3600000 };
+      if (period === "7d") return { start: now - 7 * day, step: day };
+      if (period === "30d") return { start: now - 30 * day, step: day };
+      if (period === "90d") return { start: now - 90 * day, step: 7 * day };
+      const minTs = Math.min(...RAW.memberEvents.map(e => e.ts || e.timestamp), ...RAW.messageEvents.map(e => e.ts || e.timestamp), now - 30 * day);
+      return { start: minTs, step: Math.max(day, Math.ceil((now - minTs) / 45 / day) * day) };
     }
-    function buildBuckets(start, end, step) {
+
+    function buckets(start, end, step) {
       const out = [];
       for (let t = Math.floor(start / step) * step; t < end; t += step) out.push(t);
-      return out.length ? out : [Math.floor(start / step) * step];
+      return out.length ? out : [start];
     }
-    function indexFor(ts, start, step, len) {
+
+    function idx(ts, start, step, len) {
       const i = Math.floor((ts - start) / step);
       return Math.max(0, Math.min(len - 1, i));
     }
 
-    function collect(periodKey) {
+    function collect(period) {
+      if (cache.has(period)) return cache.get(period);
+      
       const now = Date.now();
-      const cfg = getPeriodCfg(periodKey, now);
-      const currentStart = cfg.start;
-      const currentEnd = now;
-      const duration = currentEnd - currentStart;
-      const previousStart = currentStart - duration;
-      const previousEnd = currentStart;
-      const labelsTs = buildBuckets(currentStart, currentEnd, cfg.step);
-      const labels = labelsTs.map((t) => new Date(t).toLocaleString("fr-FR", cfg.step <= 3600000 ? { weekday: "short", hour: "2-digit" } : { day: "2-digit", month: "2-digit" }));
+      const cfg = getCfg(period, now);
+      const curStart = cfg.start, curEnd = now;
+      const prevStart = curStart - (curEnd - curStart), prevEnd = curStart;
+      const labelsTs = buckets(curStart, curEnd, cfg.step);
+      const labels = labelsTs.map(t => new Date(t).toLocaleString("fr-FR", cfg.step <= 3600000 ? { hour: "2-digit" } : { day: "2-digit", month: "short" }));
 
-      const msgCur = new Array(labels.length).fill(0);
-      const msgPrev = new Array(labels.length).fill(0);
-      const voiceCur = new Array(labels.length).fill(0);
-      const voicePrev = new Array(labels.length).fill(0);
-      const joinsCur = new Array(labels.length).fill(0);
-      const joinsPrev = new Array(labels.length).fill(0);
-      const leavesCur = new Array(labels.length).fill(0);
-      const leavesPrev = new Array(labels.length).fill(0);
+      const msgCur = new Array(labels.length).fill(0), msgPrev = new Array(labels.length).fill(0);
+      const voxCur = new Array(labels.length).fill(0), voxPrev = new Array(labels.length).fill(0);
+      const joinCur = new Array(labels.length).fill(0), joinPrev = new Array(labels.length).fill(0);
+      const leaveCur = new Array(labels.length).fill(0), leavePrev = new Array(labels.length).fill(0);
 
-      const userFirstMsg = new Map();
-      RAW.messageEvents.forEach((e) => {
-        if (!userFirstMsg.has(e.userId) || e.timestamp < userFirstMsg.get(e.userId)) userFirstMsg.set(e.userId, e.timestamp);
-        if (e.timestamp >= currentStart && e.timestamp < currentEnd) msgCur[indexFor(e.timestamp, currentStart, cfg.step, labels.length)] += 1;
-        if (e.timestamp >= previousStart && e.timestamp < previousEnd) msgPrev[indexFor(e.timestamp, previousStart, cfg.step, labels.length)] += 1;
+      const firstMsg = new Map();
+      (RAW.messageEvents || []).forEach(e => {
+        const ts = e.timestamp || e.ts || 0;
+        if (!firstMsg.has(e.userId) || ts < firstMsg.get(e.userId)) firstMsg.set(e.userId, ts);
+        if (ts >= curStart && ts < curEnd) msgCur[idx(ts, curStart, cfg.step, labels.length)]++;
+        if (ts >= prevStart && ts < prevEnd) msgPrev[idx(ts, prevStart, cfg.step, labels.length)]++;
       });
 
-      RAW.voiceSessions.forEach((s) => {
-        const toMin = (a, b, start, end) => Math.max(0, Math.min(b, end) - Math.max(a, start)) / 60000;
-        labelsTs.forEach((bucketStart, idx) => {
-          const bucketEnd = Math.min(currentEnd, bucketStart + cfg.step);
-          const prevBucketStart = previousStart + (bucketStart - currentStart);
-          const prevBucketEnd = Math.min(previousEnd, prevBucketStart + cfg.step);
-          voiceCur[idx] += toMin(s.startedAt, s.endedAt, bucketStart, bucketEnd);
-          voicePrev[idx] += toMin(s.startedAt, s.endedAt, prevBucketStart, prevBucketEnd);
+      (RAW.voiceSessions || []).forEach(s => {
+        const toMin = (a, b, st, en) => Math.max(0, Math.min(b || now, en) - Math.max(a || now, st)) / 60000;
+        labelsTs.forEach((bs, i) => {
+          const be = Math.min(curEnd, bs + cfg.step);
+          const pbs = prevStart + (bs - curStart), pbe = Math.min(prevEnd, pbs + cfg.step);
+          voxCur[i] += toMin(s.startedAt, s.endedAt, bs, be);
+          voxPrev[i] += toMin(s.startedAt, s.endedAt, pbs, pbe);
         });
       });
 
-      RAW.memberEvents.forEach((e) => {
+      (RAW.memberEvents || []).forEach(e => {
+        const ts = e.timestamp || e.ts || 0;
         if (e.type === "join") {
-          if (e.timestamp >= currentStart && e.timestamp < currentEnd) joinsCur[indexFor(e.timestamp, currentStart, cfg.step, labels.length)] += 1;
-          if (e.timestamp >= previousStart && e.timestamp < previousEnd) joinsPrev[indexFor(e.timestamp, previousStart, cfg.step, labels.length)] += 1;
-        }
-        if (e.type === "leave") {
-          if (e.timestamp >= currentStart && e.timestamp < currentEnd) leavesCur[indexFor(e.timestamp, currentStart, cfg.step, labels.length)] += 1;
-          if (e.timestamp >= previousStart && e.timestamp < previousEnd) leavesPrev[indexFor(e.timestamp, previousStart, cfg.step, labels.length)] += 1;
+          if (ts >= curStart && ts < curEnd) joinCur[idx(ts, curStart, cfg.step, labels.length)]++;
+          if (ts >= prevStart && ts < prevEnd) joinPrev[idx(ts, prevStart, cfg.step, labels.length)]++;
+        } else if (e.type === "leave") {
+          if (ts >= curStart && ts < curEnd) leaveCur[idx(ts, curStart, cfg.step, labels.length)]++;
+          if (ts >= prevStart && ts < prevEnd) leavePrev[idx(ts, prevStart, cfg.step, labels.length)]++;
         }
       });
 
-      const joinByUser = new Map();
-      const retentionDurations = [];
-      const firstMsgDelay = [];
-      const userEvents = RAW.memberEvents.slice().sort((a, b) => a.timestamp - b.timestamp);
-      for (const e of userEvents) {
-        if (!e.userId) continue;
-        if (e.type === "join") joinByUser.set(e.userId, e.timestamp);
-        if (e.type === "leave" && joinByUser.has(e.userId)) {
-          const joinTs = joinByUser.get(e.userId);
-          if (joinTs <= e.timestamp && joinTs >= currentStart && joinTs < currentEnd) {
-            retentionDurations.push(e.timestamp - joinTs);
-            const firstMsgTs = userFirstMsg.get(e.userId);
-            if (firstMsgTs && firstMsgTs >= joinTs) firstMsgDelay.push(firstMsgTs - joinTs);
-          }
-          joinByUser.delete(e.userId);
-        }
-      }
+      const sum = a => a.reduce((x, y) => x + y, 0);
+      const msgsC = sum(msgCur), msgsP = sum(msgPrev);
+      const voxC = sum(voxCur) * 60000, voxP = sum(voxPrev) * 60000;
+      const joinsC = sum(joinCur), joinsP = sum(joinPrev);
+      const leavesC = sum(leaveCur), leavesP = sum(leavePrev);
 
-      const sum = (arr) => arr.reduce((a, b) => a + b, 0);
-      const msgsCurrent = sum(msgCur);
-      const msgsPrev = sum(msgPrev);
-      const voiceCurrent = sum(voiceCur) * 60000;
-      const voicePrev = sum(voicePrev) * 60000;
-      const joinsCurrent = sum(joinsCur);
-      const joinsPrevious = sum(joinsPrev);
-      const leavesCurrent = sum(leavesCur);
-      const leavesPrevious = sum(leavesPrev);
-      const netCurrent = joinsCurrent - leavesCurrent;
-      const netPrevious = joinsPrevious - leavesPrevious;
-      const avgRetentionMs = retentionDurations.length ? retentionDurations.reduce((a, b) => a + b, 0) / retentionDurations.length : 0;
-      const avgFirstMsgMs = firstMsgDelay.length ? firstMsgDelay.reduce((a, b) => a + b, 0) / firstMsgDelay.length : 0;
-
-      return {
+      const data = {
         labels,
-        msgCur, msgPrev,
-        voiceCur: voiceCur.map((v) => Math.round(v)),
-        voicePrev: voicePrev.map((v) => Math.round(v)),
-        joinsCur, joinsPrev, leavesCur, leavesPrev,
-        totals: {
-          msgsCurrent, msgsPrev, voiceCurrent, voicePrev, netCurrent, netPrevious,
-          scoreCurrent: msgsCurrent + Math.round(voiceCurrent / 60000) + joinsCurrent,
-          scorePrevious: msgsPrev + Math.round(voicePrev / 60000) + joinsPrevious,
-          avgRetentionMs, avgFirstMsgMs,
-          joinsCurrent, joinsPrevious, leavesCurrent, leavesPrevious,
-        },
+        msg: { cur: msgCur, prev: msgPrev, totC: msgsC, totP: msgsP },
+        vox: { cur: voxCur.map(v => Math.round(v)), prev: voxPrev.map(v => Math.round(v)), totC: voxC, totP: voxP },
+        mem: { joinC: joinCur, joinP: joinPrev, leaveC: leaveCur, leaveP: leavePrev, netC: joinsC - leavesC, netP: joinsP - leavesP, joinsC, joinsP, leavesC, leavesP }
       };
+      cache.set(period, data);
+      return data;
     }
 
-    function getData(periodKey) {
-      if (!dataCache.has(periodKey)) {
-        dataCache.set(periodKey, collect(periodKey));
-      }
-      return dataCache.get(periodKey);
+    function updateKPIs(d, period) {
+      document.getElementById("kpi-messages").textContent = d.msg.totC.toLocaleString();
+      const bm = document.getElementById("badge-messages");
+      bm.textContent = fmt.pct(d.msg.totC, d.msg.totP);
+      bm.className = "badge " + fmt.cls(d.msg.totC, d.msg.totP);
+
+      document.getElementById("kpi-voice").textContent = fmt.dur(d.vox.totC);
+      const bv = document.getElementById("badge-voice");
+      bv.textContent = fmt.pct(d.vox.totC, d.vox.totP);
+      bv.className = "badge " + fmt.cls(d.vox.totC, d.vox.totP);
+
+      document.getElementById("kpi-members").textContent = fmt.sign(d.mem.netC);
+      const bmem = document.getElementById("badge-members");
+      bmem.textContent = fmt.pct(d.mem.netC, d.mem.netP);
+      bmem.className = "badge " + fmt.cls(d.mem.netC, d.mem.netP);
+
+      const scoreC = d.msg.totC + Math.round(d.vox.totC / 60000) + d.mem.joinsC;
+      const scoreP = d.msg.totP + Math.round(d.vox.totP / 60000) + d.mem.joinsP;
+      document.getElementById("kpi-score").textContent = fmt.sign(scoreC - scoreP);
+      const bs = document.getElementById("badge-score");
+      bs.textContent = fmt.pct(scoreC, scoreP);
+      bs.className = "badge " + fmt.cls(scoreC, scoreP);
+
+      const good = [], bad = [];
+      if (d.msg.totC >= d.msg.totP) good.push("Messages en hausse (" + fmt.pct(d.msg.totC, d.msg.totP) + ")");
+      else bad.push("Messages en baisse (" + fmt.pct(d.msg.totC, d.msg.totP) + ")");
+      if (d.vox.totC >= d.vox.totP) good.push("Activite vocale progresse (" + fmt.pct(d.vox.totC, d.vox.totP) + ")");
+      else bad.push("Vocal en recul (" + fmt.pct(d.vox.totC, d.vox.totP) + ")");
+      if (d.mem.netC >= d.mem.netP) good.push("Retention membres OK (" + fmt.pct(d.mem.netC, d.mem.netP) + ")");
+      else bad.push("Perte de membres (" + fmt.pct(d.mem.netC, d.mem.netP) + ")");
+
+      document.getElementById("summary-text").textContent = "Vue " + period + ": " + (scoreC >= scoreP ? "La dynamique globale progresse." : "La dynamique recule.");
+      document.getElementById("list-good").innerHTML = good.length ? good.map(x => "<li>" + x + "</li>").join("") : "<li>Aucun point fort.</li>";
+      document.getElementById("list-bad").innerHTML = bad.length ? bad.map(x => "<li>" + x + "</li>").join("") : "<li>Aucun point faible.</li>";
     }
 
-    function updateKPIs(data, periodKey) {
-      const t = data.totals;
-
-      document.getElementById("kpiMessages").textContent = t.msgsCurrent.toLocaleString();
-      const msgBadge = document.getElementById("kpiMessagesBadge");
-      msgBadge.textContent = fmtPct(t.msgsCurrent, t.msgsPrev);
-      msgBadge.className = "delta-badge " + getDeltaClass(t.msgsCurrent, t.msgsPrev);
-
-      document.getElementById("kpiVoice").textContent = fmtDurationMs(t.voiceCurrent);
-      const voiceBadge = document.getElementById("kpiVoiceBadge");
-      voiceBadge.textContent = fmtPct(t.voiceCurrent, t.voicePrev);
-      voiceBadge.className = "delta-badge " + getDeltaClass(t.voiceCurrent, t.voicePrev);
-
-      document.getElementById("kpiMembers").textContent = formatSigned(t.netCurrent);
-      const membersBadge = document.getElementById("kpiMembersBadge");
-      membersBadge.textContent = fmtPct(t.netCurrent, t.netPrevious);
-      membersBadge.className = "delta-badge " + getDeltaClass(t.netCurrent, t.netPrevious);
-
-      const scoreNow = t.scoreCurrent;
-      const scoreBefore = t.scorePrevious;
-      const scoreDiff = scoreNow - scoreBefore;
-      document.getElementById("kpiScore").textContent = formatSigned(scoreDiff);
-      const scoreBadge = document.getElementById("kpiScoreBadge");
-      scoreBadge.textContent = fmtPct(scoreNow, scoreBefore);
-      scoreBadge.className = "delta-badge " + getDeltaClass(scoreNow, scoreBefore);
-
-      const strengths = [];
-      const weaknesses = [];
-      const msgP = pct(t.msgsCurrent, t.msgsPrev);
-      const voiceP = pct(t.voiceCurrent, t.voicePrev);
-      const memberP = pct(t.netCurrent, t.netPrevious);
-
-      if (msgP >= 0) strengths.push("Messages en hausse (" + formatSigned(msgP) + "%)");
-      else weaknesses.push("Messages en baisse (" + Math.round(msgP) + "%)");
-
-      if (voiceP >= 0) strengths.push("Activite vocale en progression (" + formatSigned(voiceP) + "%)");
-      else weaknesses.push("Temps vocal en recul (" + Math.round(voiceP) + "%)");
-
-      if (memberP >= 0) strengths.push("Retention membres correcte (" + formatSigned(memberP) + "%)");
-      else weaknesses.push("Net membres negatif (" + Math.round(memberP) + "%)");
-
-      if (t.avgRetentionMs > 0) strengths.push("Retention moyenne: " + fmtDurationMs(t.avgRetentionMs));
-      if (t.avgFirstMsgMs > 0) strengths.push("Premier message apres join: " + fmtDurationMs(t.avgFirstMsgMs));
-      if (t.avgFirstMsgMs > 6 * 3600000) weaknesses.push("Onboarding lent: premier message tardif");
-
-      document.getElementById("analysisSummary").textContent = "Vue " + periodKey + ": " + (scoreNow >= scoreBefore ? "La dynamique globale progresse." : "La dynamique globale recule.");
-      document.getElementById("strengthList").innerHTML = strengths.length ? strengths.map((s) => "<li>" + s + "</li>").join("") : "<li>Aucun point fort detecte.</li>";
-      document.getElementById("weaknessList").innerHTML = weaknesses.length ? weaknesses.map((s) => "<li>" + s + "</li>").join("") : "<li>Aucun point faible detecte.</li>";
-    }
-
-    function createLineChart(canvasId, labels, prevData, curData, prevLabel, curLabel, prevColor, curColor) {
-      const ctx = document.getElementById(canvasId).getContext('2d');
-      if (chartInstances.has(canvasId)) {
-        chartInstances.get(canvasId).destroy();
-      }
-      const chart = new Chart(ctx, {
-        type: 'line',
+    function makeLine(id, labels, prev, cur, colP, colC) {
+      const ctx = document.getElementById(id).getContext("2d");
+      if (charts[id]) charts[id].destroy();
+      charts[id] = new Chart(ctx, {
+        type: "line",
         data: {
-          labels: labels,
+          labels,
           datasets: [
-            {
-              label: prevLabel,
-              data: prevData,
-              borderColor: prevColor,
-              backgroundColor: prevColor + '20',
-              borderWidth: 2,
-              tension: 0.4,
-              fill: false
-            },
-            {
-              label: curLabel,
-              data: curData,
-              borderColor: curColor,
-              backgroundColor: curColor + '20',
-              borderWidth: 3,
-              tension: 0.4,
-              fill: true
-            }
+            { label: "Precedent", data: prev, borderColor: colP, backgroundColor: colP + "20", borderWidth: 2, tension: 0.3, fill: false },
+            { label: "Actuel", data: cur, borderColor: colC, backgroundColor: colC + "30", borderWidth: 3, tension: 0.3, fill: true }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-              align: 'end',
-              labels: { usePointStyle: true, boxWidth: 8 }
-            }
-          },
-          scales: {
-            x: { grid: { display: false } },
-            y: { beginAtZero: true, grid: { color: '#2d2d4a40' } }
-          },
-          interaction: { intersect: false, mode: 'index' }
+          plugins: { legend: { position: "top", align: "end", labels: { usePointStyle: true, boxWidth: 8 } } },
+          scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: "#1e1e2e" } } },
+          interaction: { intersect: false, mode: "index" }
         }
       });
-      chartInstances.set(canvasId, chart);
     }
 
-    function createMembersChart(canvasId, labels, joins, leaves) {
-      const ctx = document.getElementById(canvasId).getContext('2d');
-      if (chartInstances.has(canvasId)) {
-        chartInstances.get(canvasId).destroy();
-      }
+    function makeBars(id, labels, joins, leaves) {
+      const ctx = document.getElementById(id).getContext("2d");
+      if (charts[id]) charts[id].destroy();
       const net = joins.map((v, i) => v - leaves[i]);
-      const chart = new Chart(ctx, {
-        type: 'bar',
+      charts[id] = new Chart(ctx, {
+        type: "bar",
         data: {
-          labels: labels,
+          labels,
           datasets: [
-            {
-              label: 'Joins',
-              data: joins,
-              backgroundColor: '#10b98180',
-              borderColor: '#10b981',
-              borderWidth: 1
-            },
-            {
-              label: 'Leaves',
-              data: leaves,
-              backgroundColor: '#ef444480',
-              borderColor: '#ef4444',
-              borderWidth: 1
-            },
-            {
-              type: 'line',
-              label: 'Net',
-              data: net,
-              borderColor: '#3b82f6',
-              backgroundColor: '#3b82f620',
-              borderWidth: 2,
-              tension: 0.4
-            }
+            { label: "Joins", data: joins, backgroundColor: "#22c55e80", borderColor: "#22c55e", borderWidth: 1 },
+            { label: "Leaves", data: leaves, backgroundColor: "#ef444480", borderColor: "#ef4444", borderWidth: 1 },
+            { type: "line", label: "Net", data: net, borderColor: "#3b82f6", borderWidth: 2, tension: 0.3, pointRadius: 3 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-              align: 'end',
-              labels: { usePointStyle: true, boxWidth: 8 }
-            }
-          },
-          scales: {
-            x: { grid: { display: false } },
-            y: { beginAtZero: true, grid: { color: '#2d2d4a40' } }
-          }
+          plugins: { legend: { position: "top", align: "end", labels: { usePointStyle: true, boxWidth: 8 } } },
+          scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: "#1e1e2e" } } }
         }
       });
-      chartInstances.set(canvasId, chart);
     }
 
-    function renderDashboard(periodKey) {
-      const data = getData(periodKey);
-      updateKPIs(data, periodKey);
-
-      createLineChart('messagesChart', data.labels, data.msgPrev, data.msgCur,
-        'Periode precedente', 'Periode actuelle', '#ef4444', '#10b981');
-      createLineChart('voiceChart', data.labels, data.voicePrev, data.voiceCur,
-        'Periode precedente', 'Periode actuelle', '#ef4444', '#8b5cf6');
-      createMembersChart('membersChart', data.labels, data.joinsCur, data.leavesCur);
+    function render(period) {
+      const d = collect(period);
+      updateKPIs(d, period);
+      makeLine("chart-messages", d.labels, d.msg.prev, d.msg.cur, "#ef4444", "#22c55e");
+      makeLine("chart-voice", d.labels, d.vox.prev, d.vox.cur, "#ef4444", "#a855f7");
+      makeBars("chart-members", d.labels, d.mem.joinC, d.mem.leaveC);
     }
 
-    // Period selector
-    document.querySelectorAll('.period-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        renderDashboard(e.target.dataset.period);
+    function setup() {
+      document.querySelectorAll(".period-tab").forEach(btn => {
+        btn.onclick = function() {
+          document.querySelectorAll(".period-tab").forEach(b => b.classList.remove("active"));
+          this.classList.add("active");
+          render(this.dataset.period);
+        };
       });
-    });
 
-    // Chart period selectors
-    document.getElementById('messagesPeriodSelect').addEventListener('change', (e) => {
-      const data = getData(e.target.value);
-      createLineChart('messagesChart', data.labels, data.msgPrev, data.msgCur,
-        'Periode precedente', 'Periode actuelle', '#ef4444', '#10b981');
-    });
-    document.getElementById('voicePeriodSelect').addEventListener('change', (e) => {
-      const data = getData(e.target.value);
-      createLineChart('voiceChart', data.labels, data.voicePrev, data.voiceCur,
-        'Periode precedente', 'Periode actuelle', '#ef4444', '#8b5cf6');
-    });
-    document.getElementById('membersPeriodSelect').addEventListener('change', (e) => {
-      const data = getData(e.target.value);
-      createMembersChart('membersChart', data.labels, data.joinsCur, data.leavesCur);
-    });
+      document.getElementById("sel-messages").onchange = function() {
+        const d = collect(this.value);
+        makeLine("chart-messages", d.labels, d.msg.prev, d.msg.cur, "#ef4444", "#22c55e");
+      };
+      document.getElementById("sel-voice").onchange = function() {
+        const d = collect(this.value);
+        makeLine("chart-voice", d.labels, d.vox.prev, d.vox.cur, "#ef4444", "#a855f7");
+      };
+      document.getElementById("sel-members").onchange = function() {
+        const d = collect(this.value);
+        makeBars("chart-members", d.labels, d.mem.joinC, d.mem.leaveC);
+      };
 
-    // Initial render after DOM is ready
-    window.addEventListener('load', () => {
-      setTimeout(() => renderDashboard('7d'), 100);
-    });
+      setTimeout(() => render("7d"), 200);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setup);
+    } else {
+      setup();
+    }
   </script>
 </body>
 </html>
