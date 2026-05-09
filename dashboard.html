@@ -797,6 +797,12 @@
             </div>
             <div id="top-voice-list" class="member-list"></div>
           </div>
+          <div class="chart-box full">
+            <div class="chart-header-row">
+              <span class="chart-title">Salons vocaux les plus frequentes</span>
+            </div>
+            <div id="top-voice-channels" class="member-list"></div>
+          </div>
         </div>
       </div>
 
@@ -829,7 +835,10 @@
             </div>
           </div>
           <div class="chart-box full">
-            <div id="members-timeline"></div>
+            <div class="chart-header-row">
+              <span class="chart-title">Liste complete des membres</span>
+            </div>
+            <div id="all-members-list" class="member-list" style="max-height:600px;overflow-y:auto;"></div>
           </div>
         </div>
       </div>
@@ -864,6 +873,20 @@
           <div style="margin-top: 40px; color: #64748b; font-size: 13px;">
             Actualisation automatique toutes les 30 secondes
           </div>
+          
+          <div class="chart-box full" style="margin-top: 40px;">
+            <div class="chart-header-row">
+              <span class="chart-title">Historique des Lives (30 derniers jours)</span>
+            </div>
+            <div class="chart-area"><canvas id="chart-live-history"></canvas></div>
+          </div>
+          
+          <div class="chart-box full" style="margin-top: 20px;">
+            <div class="chart-header-row">
+              <span class="chart-title">Duree des lives par streamer</span>
+            </div>
+            <div class="chart-area"><canvas id="chart-live-duration"></canvas></div>
+          </div>
         </div>
       </div>
     </div>
@@ -872,7 +895,7 @@
   </div>
 
   <script>
-    const RAW = {"generatedAt":1778339090537,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398},{"userId":"1465491025421144268","channelId":"1481302669296537660","timestamp":1778337721230},{"userId":"1121488402605420595","channelId":"1434256926035935252","timestamp":1778338760341}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}]};
+    const RAW = {"generatedAt":1778339589464,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":4},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
     const cache = new Map();
     const charts = {};
     let currentPeriod = '7d';
@@ -1105,7 +1128,7 @@
       if (type === 'members') makeBars("chart-members", d.labels, d.mem.joinC, d.mem.leaveC);
     }
     
-    // Page loaders with progress
+    // Page loaders with progress - use pre-calculated enriched data
     async function loadMessagesPage() {
       const loading = document.getElementById('loading-messages');
       const content = document.getElementById('content-messages');
@@ -1117,36 +1140,19 @@
       prog.style.width = '0%';
       
       await new Promise(r => setTimeout(r, 100));
-      prog.style.width = '30%';
+      prog.style.width = '40%';
       
-      // Calculate top message users
-      const userCounts = {};
-      const now = Date.now();
-      const day7 = now - 7 * 86400000;
-      (RAW.messageEvents || []).forEach(e => {
-        const ts = e.timestamp || e.ts || 0;
-        if (ts >= day7) {
-          userCounts[e.userId] = (userCounts[e.userId] || 0) + 1;
-        }
-      });
+      // Use pre-calculated top message users with avatars
+      const topUsers = RAW.topMessageUsers || [];
       
       await new Promise(r => setTimeout(r, 200));
-      prog.style.width = '70%';
+      prog.style.width = '80%';
       
-      const sorted = Object.entries(userCounts).sort((a, b) => b[1] - a[1]).slice(0, 20);
-      list.innerHTML = sorted.map(([userId, count], i) => `
-        <div class="member-item">
-          <div class="member-avatar">#${i + 1}</div>
-          <div class="member-info">
-            <div class="member-name">${userId.substring(0, 8)}...</div>
-            <div class="member-meta">Utilisateur Discord</div>
-          </div>
-          <div class="member-stats">
-            <div class="member-stat-value">${count}</div>
-            <div class="member-stat-label">messages</div>
-          </div>
-        </div>
-      `).join('') || '<div class="member-item"><div class="member-info"><div class="member-name">Aucune donnee disponible</div></div></div>';
+      list.innerHTML = topUsers.map((user, i) => {
+        const initials = (user.username ? user.username.substring(0,2).toUpperCase() : '#'+ (i+1));
+        const avatar = user.avatarURL ? '<img src="' + user.avatarURL + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#a855f7);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px;">' + initials + '</div>';
+        return '<div class="member-item">' + avatar + '<div class="member-info"><div class="member-name">' + escapeHtml(user.username || 'Unknown') + '</div><div class="member-meta">' + (user.userId ? user.userId.substring(0,12) : '') + '...</div></div><div class="member-stats"><div class="member-stat-value">' + (user.count || 0).toLocaleString() + '</div><div class="member-stat-label">messages (7j)</div></div></div>';
+      }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name">Aucune donnee disponible</div></div></div>';
       
       await new Promise(r => setTimeout(r, 200));
       prog.style.width = '100%';
@@ -1160,7 +1166,8 @@
       const loading = document.getElementById('loading-vocal');
       const content = document.getElementById('content-vocal');
       const prog = document.getElementById('prog-vocal');
-      const list = document.getElementById('top-voice-list');
+      const userList = document.getElementById('top-voice-list');
+      const channelList = document.getElementById('top-voice-channels');
       
       loading.classList.remove('hidden');
       content.classList.add('hidden');
@@ -1169,40 +1176,33 @@
       await new Promise(r => setTimeout(r, 100));
       prog.style.width = '30%';
       
-      const userTime = {};
-      const now = Date.now();
-      const day7 = now - 7 * 86400000;
-      (RAW.voiceSessions || []).forEach(s => {
-        if ((s.endedAt || now) >= day7) {
-          const duration = Math.min(s.endedAt || now, now) - Math.max(s.startedAt, day7);
-          if (duration > 0) {
-            userTime[s.userId] = (userTime[s.userId] || 0) + duration;
-          }
-        }
-      });
+      // Use pre-calculated data
+      const topUsers = RAW.topVoiceUsers || [];
+      const topChannels = RAW.topVoiceChannels || [];
       
       await new Promise(r => setTimeout(r, 200));
-      prog.style.width = '70%';
+      prog.style.width = '60%';
       
-      const sorted = Object.entries(userTime).sort((a, b) => b[1] - a[1]).slice(0, 20);
-      list.innerHTML = sorted.map(([userId, ms], i) => {
-        const hours = Math.round(ms / 3600000 * 10) / 10;
-        return `
-          <div class="member-item">
-            <div class="member-avatar">#${i + 1}</div>
-            <div class="member-info">
-              <div class="member-name">${userId.substring(0, 8)}...</div>
-              <div class="member-meta">Utilisateur Discord</div>
-            </div>
-            <div class="member-stats">
-              <div class="member-stat-value">${hours}h</div>
-              <div class="member-stat-label">en vocal</div>
-            </div>
-          </div>
-        `;
+      // Render top users with avatars
+      userList.innerHTML = topUsers.map((user, i) => {
+        const hours = Math.round(user.time / 3600000 * 10) / 10;
+        const initials = (user.username ? user.username.substring(0,2).toUpperCase() : '#' + (i+1));
+        const avatar = user.avatarURL ? '<img src="' + user.avatarURL + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#ec4899);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px;">' + initials + '</div>';
+        return '<div class="member-item">' + avatar + '<div class="member-info"><div class="member-name">' + escapeHtml(user.username || 'Unknown') + '</div><div class="member-meta">' + (user.userId ? user.userId.substring(0,12) : '') + '...</div></div><div class="member-stats"><div class="member-stat-value">' + hours + 'h</div><div class="member-stat-label">en vocal (7j)</div></div></div>';
       }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name">Aucune donnee disponible</div></div></div>';
       
       await new Promise(r => setTimeout(r, 200));
+      prog.style.width = '90%';
+      
+      // Render top channels
+      if (channelList) {
+        channelList.innerHTML = topChannels.map((ch, i) => {
+          const hours = Math.round(ch.time / 3600000 * 10) / 10;
+          return '<div class="member-item"><div class="member-avatar" style="background:linear-gradient(135deg,#22c55e,#10b981);">🎙️</div><div class="member-info"><div class="member-name">' + escapeHtml(ch.name || 'Unknown') + '</div><div class="member-meta">Salon vocal #' + (i+1) + '</div></div><div class="member-stats"><div class="member-stat-value">' + hours + 'h</div><div class="member-stat-label">temps total</div></div></div>';
+        }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name">Aucune donnee disponible</div></div></div>';
+      }
+      
+      await new Promise(r => setTimeout(r, 100));
       prog.style.width = '100%';
       await new Promise(r => setTimeout(r, 200));
       
@@ -1214,14 +1214,16 @@
       const loading = document.getElementById('loading-membres');
       const content = document.getElementById('content-membres');
       const prog = document.getElementById('prog-membres');
+      const memberListEl = document.getElementById('all-members-list');
       
       loading.classList.remove('hidden');
       content.classList.add('hidden');
       prog.style.width = '0%';
       
       await new Promise(r => setTimeout(r, 100));
-      prog.style.width = '40%';
+      prog.style.width = '30%';
       
+      // Calculate stats
       let joins = 0, leaves = 0;
       (RAW.memberEvents || []).forEach(e => {
         if (e.type === 'join') joins++;
@@ -1229,11 +1231,22 @@
       });
       
       await new Promise(r => setTimeout(r, 200));
-      prog.style.width = '80%';
+      prog.style.width = '60%';
       
       document.getElementById('stat-total-joins').textContent = joins;
       document.getElementById('stat-total-leaves').textContent = leaves;
       document.getElementById('stat-current-members').textContent = joins - leaves;
+      
+      // Render member list with avatars
+      if (memberListEl) {
+        const members = RAW.memberList || [];
+        memberListEl.innerHTML = members.map((m, i) => {
+          const initials = (m.username ? m.username.substring(0,2).toUpperCase() : '??');
+          const avatar = m.avatarURL ? '<img src="' + m.avatarURL + '" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#22c55e);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px;">' + initials + '</div>';
+          const joinDate = m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('fr-FR') : 'Inconnu';
+          return '<div class="member-item">' + avatar + '<div class="member-info"><div class="member-name">' + escapeHtml(m.username || 'Unknown') + '</div><div class="member-meta">ID: ' + (m.userId ? m.userId.substring(0,12) : '...') + ' - Join: ' + joinDate + '</div></div><div class="member-stats"><div class="member-stat-value">' + (m.userId ? m.userId.substring(0,6) : '') + '</div><div class="member-stat-label">User ID</div></div></div>';
+        }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name">Aucun membre trouve</div></div></div>';
+      }
       
       await new Promise(r => setTimeout(r, 200));
       prog.style.width = '100%';
@@ -1243,11 +1256,14 @@
       content.classList.remove('hidden');
     }
     
-    // Live status check
+    // Live status check - use real data from dataBundle
     async function checkLiveStatus() {
-      // Simulate live check - in real implementation, this would fetch from an API
-      const clnprimeLive = Math.random() > 0.7; // 30% chance online for demo
-      const aladintk7Live = Math.random() > 0.8; // 20% chance online for demo
+      // Get live data from dataBundle
+      const currentLive = RAW.currentLive || { clnprime: null, aladintk7: null };
+      const liveHistory = RAW.liveHistory || [];
+      
+      const clnprimeLive = !!currentLive.clnprime;
+      const aladintk7Live = !!currentLive.aladintk7;
       
       const indicator = document.getElementById('live-indicator');
       const text = document.getElementById('live-text');
@@ -1289,6 +1305,86 @@
         aladinStatus.style.color = '#64748b';
         aladinBtn.textContent = 'Hors ligne';
         aladinBtn.classList.add('offline');
+      }
+      
+      // Render live history charts
+      renderLiveCharts(liveHistory);
+    }
+    
+    function renderLiveCharts(liveHistory) {
+      const now = Date.now();
+      const day30 = now - 30 * 86400000;
+      const day7 = now - 7 * 86400000;
+      
+      // Filter history for last 30 days
+      const recentHistory = liveHistory.filter(h => h.startTime >= day30);
+      
+      // Group by day for timeline
+      const dailyStats = {};
+      for (let i = 29; i >= 0; i--) {
+        const day = new Date(now - i * 86400000).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+        dailyStats[day] = { clnprime: 0, aladintk7: 0 };
+      }
+      
+      recentHistory.forEach(h => {
+        const day = new Date(h.startTime).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+        if (dailyStats[day]) {
+          const key = h.username === 'clnprime' ? 'clnprime' : 'aladintk7';
+          dailyStats[day][key] += (h.duration || 0) / 3600000; // Convert to hours
+        }
+      });
+      
+      const labels = Object.keys(dailyStats);
+      const clnData = labels.map(d => dailyStats[d].clnprime);
+      const aladinData = labels.map(d => dailyStats[d].aladintk7);
+      
+      // Create timeline chart
+      const ctx1 = document.getElementById('chart-live-history');
+      if (ctx1) {
+        if (charts['live-history']) charts['live-history'].destroy();
+        charts['live-history'] = new Chart(ctx1.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              { label: '@clnprime', data: clnData, backgroundColor: '#ff005080', borderColor: '#ff0050', borderWidth: 1 },
+              { label: '@aladintk7', data: aladinData, backgroundColor: '#00f2ea80', borderColor: '#00f2ea', borderWidth: 1 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top', align: 'end' } },
+            scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, beginAtZero: true, grid: { color: '#1e1e2e' }, title: { display: true, text: 'Heures de live' } } }
+          }
+        });
+      }
+      
+      // Calculate total duration by streamer
+      const clnTotal = recentHistory.filter(h => h.username === 'clnprime').reduce((a, b) => a + (b.duration || 0), 0);
+      const aladinTotal = recentHistory.filter(h => h.username === 'aladintk7').reduce((a, b) => a + (b.duration || 0), 0);
+      
+      // Create duration pie chart
+      const ctx2 = document.getElementById('chart-live-duration');
+      if (ctx2) {
+        if (charts['live-duration']) charts['live-duration'].destroy();
+        charts['live-duration'] = new Chart(ctx2.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['@clnprime', '@aladintk7'],
+            datasets: [{
+              data: [Math.round(clnTotal/3600000*10)/10, Math.round(aladinTotal/3600000*10)/10],
+              backgroundColor: ['#ff0050', '#00f2ea'],
+              borderColor: '#111118',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'right' } }
+          }
+        });
       }
     }
     
