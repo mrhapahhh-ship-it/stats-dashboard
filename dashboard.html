@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="grid">
-      <div class="card"><div class="k">Messages</div><div class="v" id="kpiMessages">4</div><div class="vs" id="kpiMessagesDelta">--</div></div>
+      <div class="card"><div class="k">Messages</div><div class="v" id="kpiMessages">5</div><div class="vs" id="kpiMessagesDelta">--</div></div>
       <div class="card"><div class="k">Vocal cumule</div><div class="v" id="kpiVoice">0 min</div><div class="vs" id="kpiVoiceDelta">--</div></div>
       <div class="card"><div class="k">Membres (net)</div><div class="v" id="kpiMembers">+1</div><div class="vs" id="kpiMembersDelta">--</div></div>
       <div class="card"><div class="k">Score global</div><div class="v score" id="kpiScore">+185</div><div class="vs" id="kpiScoreDelta">Le serveur progresse globalement (+100% d&#39;activite combinee). Les indicateurs positifs dominent.</div></div>
@@ -110,7 +110,7 @@
     <div class="cols">
       <div class="card">
         <div class="k">Points forts</div>
-        <ul id="strengthList"><li>Messages: +4 messages (+100%), +2 actif(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
+        <ul id="strengthList"><li>Messages: +5 messages (+100%), +3 actif(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
       </div>
       <div class="card">
         <div class="k">Points a ameliorer</div>
@@ -120,7 +120,7 @@
     <p class="muted" style="margin-top:12px">Inclut: delai moyen avant 1er message apres join, retention moyenne avant depart, activite par periode et comparaison complete.</p>
   </div>
   <script>
-    const RAW = {"generatedAt":1778337715315,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398}],"voiceSessions":[]};
+    const RAW = {"generatedAt":1778337867510,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398},{"userId":"1465491025421144268","channelId":"1481302669296537660","timestamp":1778337721230}],"voiceSessions":[]};
     const dataCache = new Map();
 
     function formatSigned(v) { return (v >= 0 ? "+" : "") + Math.round(v); }
