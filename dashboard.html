@@ -4,131 +4,548 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Stats serveur - cette semaine</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    :root { color-scheme: dark; }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; background: radial-gradient(1200px 650px at 10% -10%, #1e293b 0%, #070b14 55%); color: #e2e8f0; }
-    .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 18px 44px; }
-    .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; margin-bottom: 18px; }
-    .title { font-size: 28px; font-weight: 800; margin: 0 0 8px; }
-    .sub { color: #94a3b8; margin: 0; }
-    .filterBox { background: #0f172a; border: 1px solid #273449; border-radius: 12px; padding: 10px 12px; }
-    .filterBox label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px; }
-    .filterBox select { background: #020617; color: #e2e8f0; border: 1px solid #334155; border-radius: 8px; padding: 7px 10px; min-width: 160px; }
-    .grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
-    .card { background: linear-gradient(180deg, #0f172a 0%, #0a1120 100%); border: 1px solid #223049; border-radius: 14px; padding: 14px; }
-    .k { color: #94a3b8; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
-    .v { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
-    .vs { color: #94a3b8; font-size: 12px; }
-    .score { color: #4ade80; }
-    h2 { margin: 24px 0 10px; font-size: 18px; }
-    ul { margin: 8px 0 0; padding-left: 18px; }
-    li { margin: 6px 0; }
-    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-    .charts { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
-    .chartCard { background: #0b1221; border: 1px solid #223049; border-radius: 14px; padding: 14px; min-height: 280px; }
-    .chartTitle { margin: 0 0 10px; font-size: 14px; font-weight: 700; color: #cbd5e1; }
-    .chartWrap { position: relative; width: 100%; height: 230px; }
-    .chartWrap > div { width: 100%; height: 100%; }
-    .muted { color: #94a3b8; }
-    .pill { display: inline-block; padding: 3px 8px; border-radius: 999px; background: #102036; color: #93c5fd; font-size: 11px; margin-left: 8px; }
-    @media (max-width: 980px) { .grid { grid-template-columns: 1fr 1fr; } .cols { grid-template-columns: 1fr; } .top { flex-direction: column; align-items: flex-start; } }
+    :root {
+      color-scheme: dark;
+      --bg-primary: #0f0f1a;
+      --bg-secondary: #16162a;
+      --bg-card: #1e1e3f;
+      --bg-navbar: #0a0a14;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --accent-orange: #f59e0b;
+      --border-color: #2d2d4a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--bg-navbar);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .navbar-brand svg {
+      width: 32px;
+      height: 32px;
+      color: var(--accent-blue);
+    }
+    .navbar-links {
+      display: flex;
+      gap: 8px;
+    }
+    .navbar-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .navbar-links a:hover, .navbar-links a.active {
+      color: var(--text-primary);
+      background: var(--bg-card);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Header Section */
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .header-title h1 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .header-subtitle {
+      color: var(--text-secondary);
+      font-size: 15px;
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 12px;
+    }
+    .live-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Period Selector */
+    .period-selector {
+      display: flex;
+      gap: 8px;
+      background: var(--bg-secondary);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+    .period-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .period-btn:hover {
+      color: var(--text-primary);
+    }
+    .period-btn.active {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    /* KPI Cards Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-color, var(--accent-blue)), transparent);
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-color, var(--border-color));
+    }
+    .kpi-card.messages { --accent-color: var(--accent-blue); }
+    .kpi-card.voice { --accent-color: var(--accent-purple); }
+    .kpi-card.members { --accent-color: var(--accent-green); }
+    .kpi-card.score { --accent-color: #10b981; }
+
+    .kpi-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .kpi-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .kpi-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .kpi-icon.messages { background: rgba(59, 130, 246, 0.15); }
+    .kpi-icon.voice { background: rgba(139, 92, 246, 0.15); }
+    .kpi-icon.members { background: rgba(16, 185, 129, 0.15); }
+    .kpi-icon.score { background: rgba(16, 185, 129, 0.15); }
+
+    .kpi-value {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .kpi-delta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .delta-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .delta-badge.positive {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+    }
+    .delta-badge.negative {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-red);
+    }
+    .delta-badge.neutral {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text-secondary);
+    }
+
+    /* Charts Section */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 1024px) {
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+    .chart-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .chart-card.full-width {
+      grid-column: 1 / -1;
+    }
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .chart-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .chart-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .chart-container {
+      position: relative;
+      height: 280px;
+    }
+
+    /* Analysis Section */
+    .analysis-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .analysis-section { grid-template-columns: 1fr; }
+      .header-section { flex-direction: column; }
+    }
+    .analysis-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .analysis-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .analysis-card.strengths h3 { color: var(--accent-green); }
+    .analysis-card.weaknesses h3 { color: var(--accent-red); }
+    .analysis-list {
+      list-style: none;
+    }
+    .analysis-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .analysis-list li:last-child { border-bottom: none; }
+    .analysis-list li::before {
+      content: '→';
+      color: var(--accent-color);
+      font-weight: bold;
+    }
+    .analysis-card.strengths { --accent-color: var(--accent-green); }
+    .analysis-card.weaknesses { --accent-color: var(--accent-red); }
+
+    /* Summary Card */
+    .summary-card {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .summary-text {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      border-top: 1px solid var(--border-color);
+      margin-top: 32px;
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div>
-        <h1 class="title">Dashboard global</h1>
-        <p class="sub">Comparaison cette semaine vs semaine derniere <span class="pill">auto live</span></p>
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="navbar-brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18"/>
+          <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+        </svg>
+        CLN Stats
       </div>
-      <div class="filterBox">
-        <label for="globalPeriodSelect">Duree KPIs globaux</label>
-        <select id="globalPeriodSelect">
-          <option value="24h">24h</option>
-          <option value="7d" selected>7 jours</option>
-          <option value="30d">30 jours</option>
-          <option value="90d">90 jours</option>
-          <option value="all">Tout l'historique</option>
-        </select>
+      <div class="navbar-links">
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">Messages</a>
+        <a href="#">Vocal</a>
+        <a href="#">Membres</a>
       </div>
     </div>
-    <div class="grid">
-      <div class="card"><div class="k">Messages</div><div class="v" id="kpiMessages">5</div><div class="vs" id="kpiMessagesDelta">--</div></div>
-      <div class="card"><div class="k">Vocal cumule</div><div class="v" id="kpiVoice">0 min</div><div class="vs" id="kpiVoiceDelta">--</div></div>
-      <div class="card"><div class="k">Membres (net)</div><div class="v" id="kpiMembers">+1</div><div class="vs" id="kpiMembersDelta">--</div></div>
-      <div class="card"><div class="k">Score global</div><div class="v score" id="kpiScore">+185</div><div class="vs" id="kpiScoreDelta">Le serveur progresse globalement (+100% d&#39;activite combinee). Les indicateurs positifs dominent.</div></div>
-    </div>
+  </nav>
 
-    <div class="charts">
-      <div class="chartCard">
-        <h3 class="chartTitle">Messages: evolution actuelle vs precedente
-          <span style="float:right">
-            <select id="messagesPeriodSelect">
-              <option value="24h">24h</option>
-              <option value="7d" selected>7 jours</option>
-              <option value="30d">30 jours</option>
-              <option value="90d">90 jours</option>
-              <option value="all">Tout</option>
-            </select>
-          </span>
-        </h3>
-        <div class="chartWrap"><div id="messagesChart"></div></div>
+  <div class="container">
+    <div class="header-section">
+      <div class="header-title">
+        <h1>Dashboard Global</h1>
+        <p class="header-subtitle">
+          Comparaison cette semaine vs semaine derniere
+          <span class="live-badge">LIVE</span>
+        </p>
       </div>
-      <div class="chartCard">
-        <h3 class="chartTitle">Vocal: minutes par tranche
-          <span style="float:right">
-            <select id="voicePeriodSelect">
-              <option value="24h">24h</option>
-              <option value="7d" selected>7 jours</option>
-              <option value="30d">30 jours</option>
-              <option value="90d">90 jours</option>
-              <option value="all">Tout</option>
-            </select>
-          </span>
-        </h3>
-        <div class="chartWrap"><div id="voiceChart"></div></div>
-      </div>
-      <div class="chartCard">
-        <h3 class="chartTitle">Membres: joins / leaves / net
-          <span style="float:right">
-            <select id="membersPeriodSelect">
-              <option value="24h">24h</option>
-              <option value="7d" selected>7 jours</option>
-              <option value="30d">30 jours</option>
-              <option value="90d">90 jours</option>
-              <option value="all">Tout</option>
-            </select>
-          </span>
-        </h3>
-        <div class="chartWrap"><div id="membersChart"></div></div>
+      <div class="period-selector">
+        <button class="period-btn" data-period="24h">24h</button>
+        <button class="period-btn active" data-period="7d">7 jours</button>
+        <button class="period-btn" data-period="30d">30 jours</button>
+        <button class="period-btn" data-period="90d">90 jours</button>
+        <button class="period-btn" data-period="all">Tout</button>
       </div>
     </div>
 
-    <h2>Analyse automatique</h2>
-    <div class="card" id="analysisSummary">Le serveur progresse globalement (+100% d&#39;activite combinee). Les indicateurs positifs dominent.</div>
-    <div class="cols">
-      <div class="card">
-        <div class="k">Points forts</div>
-        <ul id="strengthList"><li>Messages: +5 messages (+100%), +3 actif(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
+    <div class="kpi-grid">
+      <div class="kpi-card messages">
+        <div class="kpi-header">
+          <span class="kpi-label">Messages</span>
+          <div class="kpi-icon messages">💬</div>
+        </div>
+        <div class="kpi-value" id="kpiMessages">5</div>
+        <div class="kpi-delta">
+          <span class="delta-badge" id="kpiMessagesBadge">--</span>
+          <span id="kpiMessagesText">vs periode precedente</span>
+        </div>
       </div>
-      <div class="card">
-        <div class="k">Points a ameliorer</div>
-        <ul id="weaknessList"><li>Aucun point faible net sur cette periode.</li></ul>
+      <div class="kpi-card voice">
+        <div class="kpi-header">
+          <span class="kpi-label">Vocal Cumule</span>
+          <div class="kpi-icon voice">🎙️</div>
+        </div>
+        <div class="kpi-value" id="kpiVoice">0 min</div>
+        <div class="kpi-delta">
+          <span class="delta-badge" id="kpiVoiceBadge">--</span>
+          <span id="kpiVoiceText">vs periode precedente</span>
+        </div>
+      </div>
+      <div class="kpi-card members">
+        <div class="kpi-header">
+          <span class="kpi-label">Membres (net)</span>
+          <div class="kpi-icon members">👥</div>
+        </div>
+        <div class="kpi-value" id="kpiMembers">+1</div>
+        <div class="kpi-delta">
+          <span class="delta-badge" id="kpiMembersBadge">--</span>
+          <span id="kpiMembersText">vs periode precedente</span>
+        </div>
+      </div>
+      <div class="kpi-card score">
+        <div class="kpi-header">
+          <span class="kpi-label">Score Global</span>
+          <div class="kpi-icon score">⭐</div>
+        </div>
+        <div class="kpi-value" id="kpiScore" style="color: #10b981">+185</div>
+        <div class="kpi-delta">
+          <span class="delta-badge" id="kpiScoreBadge">--</span>
+          <span id="kpiScoreText">Indice global</span>
+        </div>
       </div>
     </div>
-    <p class="muted" style="margin-top:12px">Inclut: delai moyen avant 1er message apres join, retention moyenne avant depart, activite par periode et comparaison complete.</p>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Evolution des Messages</h3>
+          <select class="chart-select" id="messagesPeriodSelect">
+            <option value="24h">24h</option>
+            <option value="7d" selected>7 jours</option>
+            <option value="30d">30 jours</option>
+            <option value="90d">90 jours</option>
+            <option value="all">Tout</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <canvas id="messagesChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3 class="chart-title">Activite Vocal</h3>
+          <select class="chart-select" id="voicePeriodSelect">
+            <option value="24h">24h</option>
+            <option value="7d" selected>7 jours</option>
+            <option value="30d">30 jours</option>
+            <option value="90d">90 jours</option>
+            <option value="all">Tout</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <canvas id="voiceChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card full-width">
+        <div class="chart-header">
+          <h3 class="chart-title">Evolution des Membres (Joins / Leaves)</h3>
+          <select class="chart-select" id="membersPeriodSelect">
+            <option value="24h">24h</option>
+            <option value="7d" selected>7 jours</option>
+            <option value="30d">30 jours</option>
+            <option value="90d">90 jours</option>
+            <option value="all">Tout</option>
+          </select>
+        </div>
+        <div class="chart-container">
+          <canvas id="membersChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <p class="summary-text" id="analysisSummary">Le serveur progresse globalement (+100% d&#39;activite combinee). Les indicateurs positifs dominent.</p>
+    </div>
+
+    <div class="analysis-section">
+      <div class="analysis-card strengths">
+        <h3>Points Forts</h3>
+        <ul class="analysis-list" id="strengthList">
+          <li>Messages: +5 messages (+100%), +3 actif(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li>
+        </ul>
+      </div>
+      <div class="analysis-card weaknesses">
+        <h3>Points a Ameliorer</h3>
+        <ul class="analysis-list" id="weaknessList">
+          <li>Aucun point faible net sur cette periode.</li>
+        </ul>
+      </div>
+    </div>
   </div>
+
+  <div class="footer">
+    <p>CLN Bot Stats Dashboard - Mis a jour automatiquement</p>
+  </div>
+
   <script>
-    const RAW = {"generatedAt":1778337867510,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398},{"userId":"1465491025421144268","channelId":"1481302669296537660","timestamp":1778337721230}],"voiceSessions":[]};
+    const RAW = {"generatedAt":1778338195440,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398},{"userId":"1465491025421144268","channelId":"1481302669296537660","timestamp":1778337721230}],"voiceSessions":[]};
     const dataCache = new Map();
+    const chartInstances = new Map();
+
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#2d2d4a';
+    Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
 
     function formatSigned(v) { return (v >= 0 ? "+" : "") + Math.round(v); }
     function pct(current, previous) {
       if (previous === 0) return current === 0 ? 0 : 100;
       return ((current - previous) / previous) * 100;
     }
-    function fmtPct(current, previous) { const p = pct(current, previous); return (p >= 0 ? "+" : "") + Math.round(p) + "%"; }
+    function fmtPct(current, previous) {
+      const p = pct(current, previous);
+      return (p >= 0 ? "+" : "") + Math.round(p) + "%";
+    }
+    function getDeltaClass(current, previous) {
+      const p = pct(current, previous);
+      return p > 0 ? 'positive' : p < 0 ? 'negative' : 'neutral';
+    }
     function fmtDurationMs(ms) {
       const mins = Math.max(0, Math.round(ms / 60000));
       const h = Math.floor(mins / 60);
@@ -154,6 +571,7 @@
       const i = Math.floor((ts - start) / step);
       return Math.max(0, Math.min(len - 1, i));
     }
+
     function collect(periodKey) {
       const now = Date.now();
       const cfg = getPeriodCfg(periodKey, now);
@@ -250,128 +668,209 @@
         },
       };
     }
+
     function getData(periodKey) {
       if (!dataCache.has(periodKey)) {
         dataCache.set(periodKey, collect(periodKey));
       }
       return dataCache.get(periodKey);
     }
-    function updateKpis(data) {
+
+    function updateKPIs(data, periodKey) {
       const t = data.totals;
-      document.getElementById("kpiMessages").textContent = t.msgsCurrent;
-      document.getElementById("kpiMessagesDelta").textContent = "vs periode precedente: " + fmtPct(t.msgsCurrent, t.msgsPrev);
+
+      document.getElementById("kpiMessages").textContent = t.msgsCurrent.toLocaleString();
+      const msgBadge = document.getElementById("kpiMessagesBadge");
+      msgBadge.textContent = fmtPct(t.msgsCurrent, t.msgsPrev);
+      msgBadge.className = "delta-badge " + getDeltaClass(t.msgsCurrent, t.msgsPrev);
+
       document.getElementById("kpiVoice").textContent = fmtDurationMs(t.voiceCurrent);
-      document.getElementById("kpiVoiceDelta").textContent = "vs periode precedente: " + fmtPct(t.voiceCurrent, t.voicePrev);
+      const voiceBadge = document.getElementById("kpiVoiceBadge");
+      voiceBadge.textContent = fmtPct(t.voiceCurrent, t.voicePrev);
+      voiceBadge.className = "delta-badge " + getDeltaClass(t.voiceCurrent, t.voicePrev);
+
       document.getElementById("kpiMembers").textContent = formatSigned(t.netCurrent);
-      document.getElementById("kpiMembersDelta").textContent = "vs periode precedente: " + fmtPct(t.netCurrent, t.netPrevious);
+      const membersBadge = document.getElementById("kpiMembersBadge");
+      membersBadge.textContent = fmtPct(t.netCurrent, t.netPrevious);
+      membersBadge.className = "delta-badge " + getDeltaClass(t.netCurrent, t.netPrevious);
+
       const scoreNow = t.scoreCurrent;
       const scoreBefore = t.scorePrevious;
-      document.getElementById("kpiScore").textContent = formatSigned(scoreNow - scoreBefore) + " pts";
-      document.getElementById("kpiScoreDelta").textContent = "Indice global: " + fmtPct(scoreNow, scoreBefore);
+      const scoreDiff = scoreNow - scoreBefore;
+      document.getElementById("kpiScore").textContent = formatSigned(scoreDiff);
+      const scoreBadge = document.getElementById("kpiScoreBadge");
+      scoreBadge.textContent = fmtPct(scoreNow, scoreBefore);
+      scoreBadge.className = "delta-badge " + getDeltaClass(scoreNow, scoreBefore);
 
       const strengths = [];
       const weaknesses = [];
       const msgP = pct(t.msgsCurrent, t.msgsPrev);
       const voiceP = pct(t.voiceCurrent, t.voicePrev);
       const memberP = pct(t.netCurrent, t.netPrevious);
-      if (msgP >= 0) strengths.push("Messages en hausse (" + (msgP >= 0 ? "+" : "") + Math.round(msgP) + "%).");
-      else weaknesses.push("Messages en baisse (" + Math.round(msgP) + "%).");
-      if (voiceP >= 0) strengths.push("Activite vocale en progression (" + (voiceP >= 0 ? "+" : "") + Math.round(voiceP) + "%).");
-      else weaknesses.push("Temps vocal en recul (" + Math.round(voiceP) + "%).");
-      if (memberP >= 0) strengths.push("Retention membres correcte (" + (memberP >= 0 ? "+" : "") + Math.round(memberP) + "%).");
-      else weaknesses.push("Net membres negatif vs periode precedente (" + Math.round(memberP) + "%).");
-      if (t.avgRetentionMs > 0) strengths.push("Retention moyenne apres join: " + fmtDurationMs(t.avgRetentionMs) + ".");
-      if (t.avgFirstMsgMs > 0) strengths.push("Premier message apres join en moyenne: " + fmtDurationMs(t.avgFirstMsgMs) + ".");
-      if (t.avgFirstMsgMs > 0 && t.avgFirstMsgMs > 6 * 3600000) weaknesses.push("Onboarding lent: premier message tardif (" + fmtDurationMs(t.avgFirstMsgMs) + ").");
 
-      document.getElementById("analysisSummary").textContent = "Vue " + document.getElementById("globalPeriodSelect").value + ": " + (scoreNow >= scoreBefore ? "la dynamique globale progresse." : "la dynamique globale recule.");
+      if (msgP >= 0) strengths.push("Messages en hausse (" + formatSigned(msgP) + "%)");
+      else weaknesses.push("Messages en baisse (" + Math.round(msgP) + "%)");
+
+      if (voiceP >= 0) strengths.push("Activite vocale en progression (" + formatSigned(voiceP) + "%)");
+      else weaknesses.push("Temps vocal en recul (" + Math.round(voiceP) + "%)");
+
+      if (memberP >= 0) strengths.push("Retention membres correcte (" + formatSigned(memberP) + "%)");
+      else weaknesses.push("Net membres negatif (" + Math.round(memberP) + "%)");
+
+      if (t.avgRetentionMs > 0) strengths.push("Retention moyenne: " + fmtDurationMs(t.avgRetentionMs));
+      if (t.avgFirstMsgMs > 0) strengths.push("Premier message apres join: " + fmtDurationMs(t.avgFirstMsgMs));
+      if (t.avgFirstMsgMs > 6 * 3600000) weaknesses.push("Onboarding lent: premier message tardif");
+
+      document.getElementById("analysisSummary").textContent = "Vue " + periodKey + ": " + (scoreNow >= scoreBefore ? "La dynamique globale progresse." : "La dynamique globale recule.");
       document.getElementById("strengthList").innerHTML = strengths.length ? strengths.map((s) => "<li>" + s + "</li>").join("") : "<li>Aucun point fort detecte.</li>";
       document.getElementById("weaknessList").innerHTML = weaknesses.length ? weaknesses.map((s) => "<li>" + s + "</li>").join("") : "<li>Aucun point faible detecte.</li>";
     }
-    function polylinePoints(values, w, h, maxValue) {
-      return values.map((value, idx) => {
-        const x = (idx / Math.max(1, values.length - 1)) * w;
-        const y = h - (Math.max(0, value) / Math.max(1, maxValue)) * h;
-        return x.toFixed(2) + "," + y.toFixed(2);
-      }).join(" ");
+
+    function createLineChart(canvasId, labels, prevData, curData, prevLabel, curLabel, prevColor, curColor) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      if (chartInstances.has(canvasId)) {
+        chartInstances.get(canvasId).destroy();
+      }
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: prevLabel,
+              data: prevData,
+              borderColor: prevColor,
+              backgroundColor: prevColor + '20',
+              borderWidth: 2,
+              tension: 0.4,
+              fill: false
+            },
+            {
+              label: curLabel,
+              data: curData,
+              borderColor: curColor,
+              backgroundColor: curColor + '20',
+              borderWidth: 3,
+              tension: 0.4,
+              fill: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: { usePointStyle: true, boxWidth: 8 }
+            }
+          },
+          scales: {
+            x: { grid: { display: false } },
+            y: { beginAtZero: true, grid: { color: '#2d2d4a40' } }
+          },
+          interaction: { intersect: false, mode: 'index' }
+        }
+      });
+      chartInstances.set(canvasId, chart);
     }
-    function drawLineChartSvg(targetId, labels, prev, curr, prevColor, currColor) {
-      const host = document.getElementById(targetId);
-      const w = host.clientWidth || 860;
-      const h = host.clientHeight || 230;
-      const pad = 18;
-      const iw = Math.max(100, w - pad * 2);
-      const ih = Math.max(80, h - pad * 2);
-      const maxValue = Math.max(1, ...prev, ...curr);
-      const prevPts = polylinePoints(prev, iw, ih, maxValue);
-      const currPts = polylinePoints(curr, iw, ih, maxValue);
-      const xTicks = Math.min(8, labels.length);
-      const tickItems = Array.from({ length: xTicks }, (_, i) => {
-        const idx = Math.round((i / Math.max(1, xTicks - 1)) * (labels.length - 1));
-        const x = pad + (idx / Math.max(1, labels.length - 1)) * iw;
-        return '<text x="' + x.toFixed(1) + '" y="' + (h - 4) + '" fill="#7f8ca3" font-size="10" text-anchor="middle">' + labels[idx] + '</text>';
-      }).join("");
-      host.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
-        '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="transparent"/>' +
-        '<g transform="translate(' + pad + ',' + pad + ')">' +
-        '<polyline fill="none" stroke="' + prevColor + '" stroke-width="2.4" points="' + prevPts + '"></polyline>' +
-        '<polyline fill="none" stroke="' + currColor + '" stroke-width="2.4" points="' + currPts + '"></polyline>' +
-        '</g>' +
-        tickItems +
-        '</svg>';
-    }
-    function drawMembersChartSvg(targetId, labels, joins, leaves) {
-      const host = document.getElementById(targetId);
-      const w = host.clientWidth || 860;
-      const h = host.clientHeight || 230;
-      const pad = 18;
-      const iw = Math.max(100, w - pad * 2);
-      const ih = Math.max(80, h - pad * 2);
+
+    function createMembersChart(canvasId, labels, joins, leaves) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      if (chartInstances.has(canvasId)) {
+        chartInstances.get(canvasId).destroy();
+      }
       const net = joins.map((v, i) => v - leaves[i]);
-      const maxValue = Math.max(1, ...joins, ...leaves, ...net.map((v) => Math.abs(v)));
-      const colW = iw / Math.max(1, labels.length);
-      const bars = labels.map((_, i) => {
-        const baseX = pad + i * colW;
-        const jh = (Math.max(0, joins[i]) / maxValue) * ih;
-        const lh = (Math.max(0, leaves[i]) / maxValue) * ih;
-        return '<rect x="' + (baseX + colW * 0.15) + '" y="' + (pad + ih - jh) + '" width="' + (colW * 0.28) + '" height="' + jh + '" fill="rgba(74,222,128,0.75)"></rect>' +
-               '<rect x="' + (baseX + colW * 0.57) + '" y="' + (pad + ih - lh) + '" width="' + (colW * 0.28) + '" height="' + lh + '" fill="rgba(239,68,68,0.75)"></rect>';
-      }).join("");
-      const netPts = net.map((value, i) => {
-        const x = pad + (i / Math.max(1, labels.length - 1)) * iw;
-        const y = pad + ih - ((value + maxValue) / (2 * maxValue)) * ih;
-        return x.toFixed(2) + "," + y.toFixed(2);
-      }).join(" ");
-      host.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
-        '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="transparent"/>' +
-        bars +
-        '<polyline fill="none" stroke="#60a5fa" stroke-width="2.2" points="' + netPts + '"></polyline>' +
-        '</svg>';
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Joins',
+              data: joins,
+              backgroundColor: '#10b98180',
+              borderColor: '#10b981',
+              borderWidth: 1
+            },
+            {
+              label: 'Leaves',
+              data: leaves,
+              backgroundColor: '#ef444480',
+              borderColor: '#ef4444',
+              borderWidth: 1
+            },
+            {
+              type: 'line',
+              label: 'Net',
+              data: net,
+              borderColor: '#3b82f6',
+              backgroundColor: '#3b82f620',
+              borderWidth: 2,
+              tension: 0.4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+              align: 'end',
+              labels: { usePointStyle: true, boxWidth: 8 }
+            }
+          },
+          scales: {
+            x: { grid: { display: false } },
+            y: { beginAtZero: true, grid: { color: '#2d2d4a40' } }
+          }
+        }
+      });
+      chartInstances.set(canvasId, chart);
     }
-    function renderKpis(periodKey) {
+
+    function renderDashboard(periodKey) {
       const data = getData(periodKey);
-      updateKpis(data);
+      updateKPIs(data, periodKey);
+
+      createLineChart('messagesChart', data.labels, data.msgPrev, data.msgCur,
+        'Periode precedente', 'Periode actuelle', '#ef4444', '#10b981');
+      createLineChart('voiceChart', data.labels, data.voicePrev, data.voiceCur,
+        'Periode precedente', 'Periode actuelle', '#ef4444', '#8b5cf6');
+      createMembersChart('membersChart', data.labels, data.joinsCur, data.leavesCur);
     }
-    function renderMessages(periodKey) {
-      const data = getData(periodKey);
-      drawLineChartSvg("messagesChart", data.labels, data.msgPrev, data.msgCur, "#ef4444", "#4ade80");
-    }
-    function renderVoice(periodKey) {
-      const data = getData(periodKey);
-      drawLineChartSvg("voiceChart", data.labels, data.voicePrev, data.voiceCur, "#ef4444", "#4ade80");
-    }
-    function renderMembers(periodKey) {
-      const data = getData(periodKey);
-      drawMembersChartSvg("membersChart", data.labels, data.joinsCur, data.leavesCur);
-    }
-    document.getElementById("globalPeriodSelect").addEventListener("change", (e) => renderKpis(e.target.value));
-    document.getElementById("messagesPeriodSelect").addEventListener("change", (e) => renderMessages(e.target.value));
-    document.getElementById("voicePeriodSelect").addEventListener("change", (e) => renderVoice(e.target.value));
-    document.getElementById("membersPeriodSelect").addEventListener("change", (e) => renderMembers(e.target.value));
-    renderKpis("7d");
-    renderMessages("7d");
-    renderVoice("7d");
-    renderMembers("7d");
+
+    // Period selector
+    document.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        renderDashboard(e.target.dataset.period);
+      });
+    });
+
+    // Chart period selectors
+    document.getElementById('messagesPeriodSelect').addEventListener('change', (e) => {
+      const data = getData(e.target.value);
+      createLineChart('messagesChart', data.labels, data.msgPrev, data.msgCur,
+        'Periode precedente', 'Periode actuelle', '#ef4444', '#10b981');
+    });
+    document.getElementById('voicePeriodSelect').addEventListener('change', (e) => {
+      const data = getData(e.target.value);
+      createLineChart('voiceChart', data.labels, data.voicePrev, data.voiceCur,
+        'Periode precedente', 'Periode actuelle', '#ef4444', '#8b5cf6');
+    });
+    document.getElementById('membersPeriodSelect').addEventListener('change', (e) => {
+      const data = getData(e.target.value);
+      createMembersChart('membersChart', data.labels, data.joinsCur, data.leavesCur);
+    });
+
+    // Initial render after DOM is ready
+    window.addEventListener('load', () => {
+      setTimeout(() => renderDashboard('7d'), 100);
+    });
   </script>
 </body>
 </html>
