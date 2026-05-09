@@ -100,10 +100,6 @@
       font-size: 12px;
       margin-top: 24px;
     }
-    .login-form {
-      width: 100%;
-      margin: 0;
-    }
     
     /* Main App Layout - Sidebar Dark */
     .app-wrapper {
@@ -1001,13 +997,10 @@
     <div class="login-box">
       <div class="login-logo">CLN Stats</div>
       <div class="login-subtitle">Dashboard Admin - Authentification requise</div>
-      <form id="login-form" class="login-form" action="#" autocomplete="off" novalidate>
-        <label for="login-password" class="hidden">Mot de passe</label>
-        <input type="password" id="login-password" name="password" class="login-input" placeholder="Mot de passe" maxlength="128" autocomplete="current-password">
-        <button type="submit" class="login-btn">Se connecter</button>
-      </form>
+      <input type="password" id="login-password" class="login-input" placeholder="Mot de passe" maxlength="128" autocomplete="current-password">
+      <button type="button" class="login-btn" id="login-submit">Se connecter</button>
       <div id="login-error" class="login-error">Mot de passe incorrect</div>
-      <div class="login-hint">Accès réservé · CLN Stats</div>
+      <div class="login-hint">Accès réservé — VIP Gunner</div>
     </div>
   </div>
 
@@ -1392,8 +1385,9 @@
     </main>
   </div>
 
+  <script type="application/json" id="cln-stats-raw">{"generatedAt":1778349319955,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348618596},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348857056},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778349098083}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":6},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}}</script>
   <script>
-    const RAW = {"generatedAt":1778349179866,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348618596},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348857056},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778349098083}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":6},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
+    const RAW = JSON.parse(document.getElementById("cln-stats-raw").textContent);
     const cache = new Map();
     const charts = {};
     let currentPeriod = '7d';
@@ -2039,7 +2033,7 @@
     
     // Auth functions
     const AUTH_KEY = 'cln_dashboard_auth';
-    const CORRECT_PASSWORD = "cln";
+    const CORRECT_PASSWORD = 'cln';
     
     function checkAuth() {
       const isAuth = localStorage.getItem(AUTH_KEY) === 'true';
@@ -2053,7 +2047,7 @@
     function doLogin() {
       const input = document.getElementById('login-password');
       const error = document.getElementById('login-error');
-      if ((input?.value ?? '').trim() === CORRECT_PASSWORD) {
+      if (input.value === CORRECT_PASSWORD) {
         localStorage.setItem(AUTH_KEY, 'true');
         document.getElementById('login-page').classList.add('hidden');
         document.getElementById('main-app').classList.remove('hidden');
@@ -2061,7 +2055,7 @@
         initDashboard();
       } else {
         error.classList.add('show');
-        if (input) input.value = '';
+        input.value = '';
       }
     }
     
@@ -2069,6 +2063,9 @@
       localStorage.removeItem(AUTH_KEY);
       location.reload();
     }
+
+    window.doLogin = doLogin;
+    window.doLogout = doLogout;
     
     // Navigation
     function navigate(page) {
@@ -2083,13 +2080,11 @@
       if (page === 'live') checkLiveStatus();
     }
     
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      doLogin();
+    // Bouton connexion + Entrée (évite onclick global cassé si le script ne finit pas de charger)
+    document.getElementById("login-submit").addEventListener("click", doLogin);
+    document.getElementById("login-password").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") doLogin();
     });
-    
-    window.doLogin = doLogin;
-    window.doLogout = doLogout;
     
     // Check auth on load
     checkAuth();
@@ -2228,8 +2223,7 @@
     
     // Auto refresh live status every 30s when on live page
     setInterval(() => {
-      const livePage = document.getElementById('page-live');
-      if (livePage && !livePage.classList.contains('hidden')) {
+      if (!document.getElementById('page-live').classList.contains('hidden')) {
         checkLiveStatus();
       }
     }, 30000);
