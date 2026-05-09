@@ -262,12 +262,11 @@
     }
     .period-tabs {
       display: flex;
-      gap: 4px;
-      background: linear-gradient(145deg, #0f0f0f, #141414);
-      padding: 5px;
-      border-radius: 14px;
-      border: 1px solid #262626;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
+      gap: 8px;
+      background: #141414;
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid #1a1a1a;
     }
     .period-tab {
       background: transparent;
@@ -276,21 +275,15 @@
       padding: 10px 18px;
       border-radius: 10px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
       transition: all 0.2s;
       font-family: 'Space Grotesk', sans-serif;
-      letter-spacing: 0.3px;
     }
-    .period-tab:hover { 
-      color: #a3a3a3;
-      background: rgba(255,255,255,0.03);
-    }
+    .period-tab:hover { color: #a3a3a3; }
     .period-tab.active {
-      background: linear-gradient(145deg, #262626, #1f1f1f);
+      background: #262626;
       color: #fafafa;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-      border: 1px solid #333;
     }
     
     /* KPI Cards Grid - Dark */
@@ -428,43 +421,18 @@
       color: #fafafa;
     }
     .chart-select {
-      background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-      border: 1px solid #333;
-      color: #fafafa;
-      padding: 10px 36px 10px 16px;
-      border-radius: 12px;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      color: #a3a3a3;
+      padding: 8px 14px;
+      border-radius: 10px;
       font-size: 14px;
-      font-weight: 500;
       cursor: pointer;
       outline: none;
       font-family: 'Space Grotesk', sans-serif;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      transition: all 0.2s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
-    }
-    .chart-select:hover {
-      border-color: #444;
-      background: linear-gradient(145deg, #141414, #1f1f1f);
     }
     .chart-select:focus {
       border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 2px 8px rgba(0,0,0,0.3);
-    }
-    .chart-select option {
-      background: #141414;
-      color: #fafafa;
-      padding: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
-    }
-    .chart-select option:hover,
-    .chart-select option:checked {
-      background: #262626;
-      color: #3b82f6;
     }
     .chart-body {
       padding: 28px;
@@ -992,8 +960,20 @@
   </style>
 </head>
 <body>
+  <!-- Login Page -->
+  <div id="login-page" class="login-container">
+    <div class="login-box">
+      <div class="login-logo">CLN Stats</div>
+      <div class="login-subtitle">Dashboard Admin - Authentification requise</div>
+      <input type="password" id="login-password" class="login-input" placeholder="Mot de passe" maxlength="20">
+      <button class="login-btn" onclick="doLogin()">Se connecter</button>
+      <div id="login-error" class="login-error">Mot de passe incorrect</div>
+      <div class="login-hint">Accès réservé - MDP: cln</div>
+    </div>
+  </div>
+
   <!-- Main App -->
-  <div id="main-app" class="app-wrapper">
+  <div id="main-app" class="app-wrapper hidden">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
@@ -1025,6 +1005,12 @@
           <span class="nav-badge" id="live-nav-badge"></span>
         </button>
       </nav>
+      <div class="sidebar-footer">
+        <button class="logout-btn-sidebar" onclick="doLogout()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Déconnexion
+        </button>
+      </div>
     </aside>
 
     <!-- Main Content Area -->
@@ -1050,32 +1036,32 @@
           <div class="kpi-card">
             <div class="kpi-label">Messages</div>
             <div class="kpi-value-row">
-              <div class="kpi-value" id="kpi-messages">40</div>
+              <div class="kpi-value" id="kpi-messages">41</div>
             </div>
             <div class="kpi-evolution">
-              <span class="evolution-badge up" id="badge-messages">↑ 4000%</span>
+              <span class="evolution-badge up" id="badge-messages">↑ 4100%</span>
               <span>vs période précédente</span>
             </div>
             <div class="kpi-comparison">
               <div class="kpi-comparison-item">
                 <span>N-1: 0</span>
-                <span class="comparison-value positive">+40</span>
+                <span class="comparison-value positive">+41</span>
               </div>
             </div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Temps Vocal</div>
             <div class="kpi-value-row">
-              <div class="kpi-value" id="kpi-voice">0.2h</div>
+              <div class="kpi-value" id="kpi-voice">0.3h</div>
             </div>
             <div class="kpi-evolution">
-              <span class="evolution-badge up" id="badge-voice">↑ 20%</span>
+              <span class="evolution-badge up" id="badge-voice">↑ 30%</span>
               <span>vs période précédente</span>
             </div>
             <div class="kpi-comparison">
               <div class="kpi-comparison-item">
                 <span>N-1: 0h</span>
-                <span class="comparison-value positive">+0.2h</span>
+                <span class="comparison-value positive">+0.3h</span>
               </div>
             </div>
           </div>
@@ -1166,7 +1152,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
               Points Forts
             </div>
-            <ul class="info-list" id="list-good"><li>Messages: +40 messages (+100%), +6 actif(s).</li><li>Vocal: +15 min vocal (+100%), +2 personne(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
+            <ul class="info-list" id="list-good"><li>Messages: +41 messages (+100%), +7 actif(s).</li><li>Vocal: +19 min vocal (+100%), +3 personne(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
           </div>
           <div class="info-card">
             <div class="info-card-title bad">
@@ -1368,7 +1354,7 @@
   </div>
 
   <script>
-    const RAW = {"generatedAt":1778353804959,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348618596},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348857056},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778349098083},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778349404046},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349448674},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349483881},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349507459},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778349509408},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349522308},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349551265},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349590199},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349603328},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349619078},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349632594},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349698297},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349725369},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349736018},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349748510},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349762428},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349779179},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349908291},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349934576},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778352360454},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352686405},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352698038},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352727286},{"userId":"1416535043056074956","username":"gg24290","avatarURL":"https://cdn.discordapp.com/avatars/1416535043056074956/c82b3fa769ed6e6ffdea579381ed5f5c.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352747493},{"userId":"1416535043056074956","username":"gg24290","avatarURL":"https://cdn.discordapp.com/avatars/1416535043056074956/c82b3fa769ed6e6ffdea579381ed5f5c.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352761530},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352868441},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352879876},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778353052065},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778353124861},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1434256926035935252","channelName":"┃・🧮・compteur","timestamp":1778353159976},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1434256926035935252","channelName":"┃・🧮・compteur","timestamp":1778353170751}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","startedAt":1778352808538,"endedAt":1778353041840},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","startedAt":1778353045739,"endedAt":1778353328557},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","startedAt":1778353333060,"endedAt":1778353647748}],"topMessageUsers":[{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","count":13},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","count":10},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","count":7},{"userId":"1121488402605420595","username":"Unknown","count":6},{"userId":"1416535043056074956","username":"Unknown","count":3},{"userId":"1465491025421144268","username":"Unknown","count":1}],"topVoiceUsers":[{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","time":830808},{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1486677788504232026","name":"┃・🔊・Vocal","time":830808},{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
+    const RAW = {"generatedAt":1778354424674,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348618596},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348857056},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778349098083},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778349404046},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349448674},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349483881},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349507459},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778349509408},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349522308},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349551265},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349590199},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349603328},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349619078},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349632594},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349698297},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349725369},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349736018},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349748510},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349762428},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349779179},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349908291},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778349934576},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778352360454},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352686405},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352698038},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352727286},{"userId":"1416535043056074956","username":"gg24290","avatarURL":"https://cdn.discordapp.com/avatars/1416535043056074956/c82b3fa769ed6e6ffdea579381ed5f5c.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352747493},{"userId":"1416535043056074956","username":"gg24290","avatarURL":"https://cdn.discordapp.com/avatars/1416535043056074956/c82b3fa769ed6e6ffdea579381ed5f5c.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352761530},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352868441},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1481302669296537660","channelName":"┃・🌳・discussion-99","timestamp":1778352879876},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778353052065},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","timestamp":1778353124861},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1434256926035935252","channelName":"┃・🧮・compteur","timestamp":1778353159976},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1434256926035935252","channelName":"┃・🧮・compteur","timestamp":1778353170751},{"userId":"1490132807291244597","username":"cassyyy36","avatarURL":"https://cdn.discordapp.com/avatars/1490132807291244597/30aa6d63b933d8b4290ed1f3726989ee.webp?size=128","channelId":"1434256926035935252","channelName":"┃・🧮・compteur","timestamp":1778353917846}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","startedAt":1778352808538,"endedAt":1778353041840},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","startedAt":1778353045739,"endedAt":1778353328557},{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","startedAt":1778353333060,"endedAt":1778353647748},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","channelId":"1486677788504232026","channelName":"┃・🔊・Vocal","startedAt":1778353934614,"endedAt":1778354180361}],"topMessageUsers":[{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","count":13},{"userId":"1476882509420826624","username":"louayyyyy94500","avatarURL":"https://cdn.discordapp.com/avatars/1476882509420826624/037d02c363928c2f26dea3c8323d2aca.webp?size=128","count":10},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","count":7},{"userId":"1121488402605420595","username":"Unknown","count":6},{"userId":"1416535043056074956","username":"Unknown","count":3},{"userId":"1465491025421144268","username":"Unknown","count":1},{"userId":"1490132807291244597","username":"cassyyy36","avatarURL":"https://cdn.discordapp.com/avatars/1490132807291244597/30aa6d63b933d8b4290ed1f3726989ee.webp?size=128","count":1}],"topVoiceUsers":[{"userId":"1452739065576165466","username":"mangeuse2.","avatarURL":"https://cdn.discordapp.com/avatars/1452739065576165466/b729a7f33c409f8430aaba5cbeb93547.webp?size=128","time":830808},{"userId":"1018187456870355035","username":"kyky10000","avatarURL":"https://cdn.discordapp.com/avatars/1018187456870355035/556e8917483c72fa350f607af3870f95.webp?size=128","time":245747},{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1486677788504232026","name":"┃・🔊・Vocal","time":1076555},{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
     const cache = new Map();
     const charts = {};
     let currentPeriod = '7d';
@@ -1829,15 +1815,56 @@
       if (leavesEl) leavesEl.textContent = leaves;
       if (currentEl) currentEl.textContent = joins - leaves;
       
-      // Render member list with avatars
-      if (memberListEl) {
-        const members = RAW.memberList || [];
-        memberListEl.innerHTML = members.map((m, i) => {
-          const initials = (m.username ? m.username.substring(0,2).toUpperCase() : '??');
-          const avatar = m.avatarURL ? '<img src="' + m.avatarURL + '" style="width:40px;height:40px;border-radius:14px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#22c55e);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:14px;">' + initials + '</div>';
-          const joinDate = m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('fr-FR') : 'Inconnu';
-          return '<div class="list-item" onclick="selectMember('' + m.userId + '')" style="cursor:pointer;">' + avatar + '<div class="list-info"><div class="list-title">' + escapeHtml(m.username || 'Unknown') + '</div><div class="list-subtitle">ID: ' + (m.userId ? m.userId.substring(0,12) : '...') + ' • Join: ' + joinDate + '</div></div><div class="list-value"><div class="list-value-number">' + (m.userId ? m.userId.substring(0,6) : '') + '</div><div class="list-value-label">User ID</div></div></div>';
-        }).join('') || '<div class="list-item"><div class="list-info"><div class="list-title" style="color:#525252">Aucun membre trouvé</div></div></div>';
+      // Safety timeout
+      const timeoutId = setTimeout(() => {
+        if (errorEl) errorEl.classList.add('show');
+        if (prog) prog.style.width = '100%';
+      }, PAGE_LOAD_TIMEOUT);
+      
+      try {
+        await new Promise(r => setTimeout(r, 100));
+        if (prog) prog.style.width = '30%';
+        
+        // Calculate stats
+        let joins = 0, leaves = 0;
+        (RAW.memberEvents || []).forEach(e => {
+          if (e.type === 'join') joins++;
+          if (e.type === 'leave') leaves++;
+        });
+        
+        await new Promise(r => setTimeout(r, 150));
+        if (prog) prog.style.width = '60%';
+        
+        const joinsEl = document.getElementById('stat-total-joins');
+        const leavesEl = document.getElementById('stat-total-leaves');
+        const currentEl = document.getElementById('stat-current-members');
+        if (joinsEl) joinsEl.textContent = joins;
+        if (leavesEl) leavesEl.textContent = leaves;
+        if (currentEl) currentEl.textContent = joins - leaves;
+        
+        // Render member list with avatars
+        if (memberListEl) {
+          const members = RAW.memberList || [];
+          memberListEl.innerHTML = members.map((m, i) => {
+            const initials = (m.username ? m.username.substring(0,2).toUpperCase() : '??');
+            const avatar = m.avatarURL ? '<img src="' + m.avatarURL + '" style="width:40px;height:40px;border-radius:14px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#22c55e);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:14px;">' + initials + '</div>';
+            const joinDate = m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('fr-FR') : 'Inconnu';
+            return '<div class="list-item">' + avatar + '<div class="list-info"><div class="list-title">' + escapeHtml(m.username || 'Unknown') + '</div><div class="list-subtitle">ID: ' + (m.userId ? m.userId.substring(0,12) : '...') + ' - Join: ' + joinDate + '</div></div><div class="list-value"><div class="list-value-number">' + (m.userId ? m.userId.substring(0,6) : '') + '</div><div class="list-value-label">User ID</div></div></div>';
+          }).join('') || '<div class="list-item"><div class="list-info"><div class="list-title" style="color:#525252">Aucun membre trouvé</div></div></div>';
+        }
+        
+        await new Promise(r => setTimeout(r, 150));
+        if (prog) prog.style.width = '100%';
+        await new Promise(r => setTimeout(r, 150));
+        
+        clearTimeout(timeoutId);
+        loading.classList.add('hidden');
+        content.classList.remove('hidden');
+      } catch (err) {
+        clearTimeout(timeoutId);
+        console.error('Error loading membres page:', err);
+        if (errorEl) errorEl.classList.add('show');
+        if (prog) prog.style.width = '100%';
       }
     }
     
@@ -2012,14 +2039,45 @@
         .replace(/'/g, '&#039;');
     }
     
+    // Auth functions
+    const AUTH_KEY = 'cln_dashboard_auth';
+    const CORRECT_PASSWORD = 'cln';
+    
+    function checkAuth() {
+      const isAuth = localStorage.getItem(AUTH_KEY) === 'true';
+      if (isAuth) {
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        initDashboard();
+      }
+    }
+    
+    function doLogin() {
+      const input = document.getElementById('login-password');
+      const error = document.getElementById('login-error');
+      if (input.value === CORRECT_PASSWORD) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        error.classList.remove('show');
+        initDashboard();
+      } else {
+        error.classList.add('show');
+        input.value = '';
+      }
+    }
+    
+    function doLogout() {
+      localStorage.removeItem(AUTH_KEY);
+      location.reload();
+    }
+    
     // Navigation
     function navigate(page) {
       document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-      const target = document.getElementById('page-' + page);
-      if (target) target.classList.remove('hidden');
+      document.getElementById('page-' + page).classList.remove('hidden');
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      const btn = document.querySelector('[data-page="' + page + '"]');
-      if (btn) btn.classList.add('active');
+      document.querySelector('[data-page="' + page + '"]').classList.add('active');
       
       if (page === 'messages') loadMessagesPage();
       if (page === 'vocal') loadVocalPage();
@@ -2027,8 +2085,13 @@
       if (page === 'live') checkLiveStatus();
     }
     
-    // Initialize dashboard on load
-    initDashboard();
+    // Enter key on login
+    document.getElementById('login-password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') doLogin();
+    });
+    
+    // Check auth on load
+    checkAuth();
     
     // Member Search Functions
     let selectedMember = null;
@@ -2168,16 +2231,6 @@
         checkLiveStatus();
       }
     }, 30000);
-    
-    // Expose all functions globally for onclick handlers
-    window.navigate = navigate;
-    window.setPeriod = setPeriod;
-    window.loadMessagesPage = loadMessagesPage;
-    window.loadVocalPage = loadVocalPage;
-    window.loadMembresPage = loadMembresPage;
-    window.selectMember = selectMember;
-    window.closeProfile = closeProfile;
-    window.handleMemberSearch = handleMemberSearch;
   </script>
 </body>
 </html>
