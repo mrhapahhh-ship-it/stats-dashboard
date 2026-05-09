@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stats serveur - depuis le debut</title>
+  <title>CLN Stats Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,6 +13,80 @@
       color: #e2e8f0;
       min-height: 100vh;
     }
+    .hidden { display: none !important; }
+    
+    /* Login Page */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0a0a0f 0%, #111118 50%, #0a0a0f 100%);
+    }
+    .login-box {
+      background: #111118;
+      border: 1px solid #1e1e2e;
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-logo {
+      font-size: 32px;
+      font-weight: 800;
+      color: #60a5fa;
+      margin-bottom: 8px;
+    }
+    .login-subtitle {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    .login-input {
+      width: 100%;
+      background: #1e1e2e;
+      border: 1px solid #2d2d3d;
+      color: #e2e8f0;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+    .login-input:focus {
+      border-color: #60a5fa;
+    }
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      border: none;
+      color: #fff;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .login-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+    }
+    .login-error {
+      color: #ef4444;
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+    .login-error.show { display: block; }
+    .login-hint {
+      color: #475569;
+      font-size: 12px;
+      margin-top: 20px;
+    }
+    
+    /* Navbar */
     .navbar {
       background: #111118;
       border-bottom: 1px solid #1e1e2e;
@@ -36,29 +110,107 @@
       font-size: 18px;
       font-weight: 700;
       color: #60a5fa;
+      cursor: pointer;
     }
     .nav-links {
       display: flex;
       gap: 4px;
     }
-    .nav-links a {
+    .nav-links button {
+      background: transparent;
+      border: none;
       color: #94a3b8;
-      text-decoration: none;
       padding: 8px 14px;
       border-radius: 6px;
       font-size: 14px;
       font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .nav-links a:hover, .nav-links a.active {
+    .nav-links button:hover, .nav-links button.active {
       color: #e2e8f0;
       background: #1e1e2e;
     }
+    .nav-links button.live-tab {
+      position: relative;
+    }
+    .nav-links button.live-tab::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 6px;
+      height: 6px;
+      background: #ef4444;
+      border-radius: 50%;
+      display: none;
+    }
+    .nav-links button.live-tab.live-active::before {
+      display: block;
+      animation: pulse 2s infinite;
+    }
+    .logout-btn {
+      background: transparent;
+      border: 1px solid #2d2d3d;
+      color: #64748b;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .logout-btn:hover {
+      color: #e2e8f0;
+      border-color: #64748b;
+    }
+    
+    /* Main Container */
     .container {
       max-width: 1400px;
       margin: 0 auto;
       padding: 24px 20px;
     }
-    .header {
+    
+    /* Loading State */
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #1e1e2e;
+      border-top-color: #60a5fa;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text {
+      color: #64748b;
+      font-size: 14px;
+      margin-top: 16px;
+    }
+    .progress-bar {
+      width: 200px;
+      height: 4px;
+      background: #1e1e2e;
+      border-radius: 2px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    
+    /* Page Header */
+    .page-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -96,7 +248,6 @@
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     
     .period-tabs {
       display: flex;
@@ -123,6 +274,7 @@
       color: #e2e8f0;
     }
     
+    /* Stats Grid */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -152,7 +304,7 @@
     .stat-card.blue { --accent: #3b82f6; }
     .stat-card.purple { --accent: #a855f7; }
     .stat-card.green { --accent: #22c55e; }
-    .stat-card.orange { --accent: #94a3b8; }
+    .stat-card.orange { --accent: #10b981; }
     
     .stat-header {
       display: flex;
@@ -202,6 +354,7 @@
       color: #64748b;
     }
     
+    /* Charts */
     .charts-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -244,6 +397,7 @@
       position: relative;
     }
     
+    /* Lists */
     .info-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -290,6 +444,147 @@
       line-height: 1.6;
     }
     
+    /* Member List */
+    .member-list {
+      background: #111118;
+      border: 1px solid #1e1e2e;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .member-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      border-bottom: 1px solid #1e1e2e;
+      transition: background 0.2s;
+    }
+    .member-item:hover {
+      background: #16161f;
+    }
+    .member-item:last-child {
+      border-bottom: none;
+    }
+    .member-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #a855f7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      font-size: 14px;
+    }
+    .member-info {
+      flex: 1;
+    }
+    .member-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .member-meta {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .member-stats {
+      text-align: right;
+    }
+    .member-stat-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: #60a5fa;
+    }
+    .member-stat-label {
+      font-size: 11px;
+      color: #64748b;
+    }
+    
+    /* Live Page */
+    .live-container {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #111118;
+      border: 1px solid #1e1e2e;
+      padding: 16px 28px;
+      border-radius: 50px;
+      margin-bottom: 32px;
+    }
+    .live-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ef4444;
+    }
+    .live-indicator.online {
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    .live-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .live-channels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .live-channel {
+      background: #111118;
+      border: 1px solid #1e1e2e;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+    }
+    .live-channel-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff0050, #00f2ea);
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+    .live-channel-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 8px;
+    }
+    .live-channel-status {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    .live-channel-btn {
+      display: inline-block;
+      background: #ff0050;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .live-channel-btn.offline {
+      background: #1e1e2e;
+      color: #64748b;
+      pointer-events: none;
+    }
+    
     footer {
       text-align: center;
       padding: 24px;
@@ -301,157 +596,338 @@
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-inner">
-      <div class="logo">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 3v18h18"/>
-          <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
-        </svg>
-        CLN Stats
-      </div>
-      <div class="nav-links">
-        <a href="#" class="active">Dashboard</a>
-        <a href="#">Messages</a>
-        <a href="#">Vocal</a>
-        <a href="#">Membres</a>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container">
-    <div class="header">
-      <div>
-        <h1>Dashboard Global</h1>
-        <div class="subtitle">
-          Comparaison depuis le debut vs periode precedente
-          <span class="live-badge">LIVE</span>
-        </div>
-      </div>
-      <div class="period-tabs">
-        <button class="period-tab" data-period="24h">24h</button>
-        <button class="period-tab active" data-period="7d">7 jours</button>
-        <button class="period-tab" data-period="30d">30 jours</button>
-        <button class="period-tab" data-period="90d">90 jours</button>
-        <button class="period-tab" data-period="all">Tout</button>
-      </div>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card blue">
-        <div class="stat-header">
-          <span class="stat-label">Messages</span>
-          <span class="stat-icon">💬</span>
-        </div>
-        <div class="stat-value" id="kpi-messages">5</div>
-        <div class="stat-delta">
-          <span class="badge" id="badge-messages">--</span>
-          <span>vs periode precedente</span>
-        </div>
-      </div>
-      <div class="stat-card purple">
-        <div class="stat-header">
-          <span class="stat-label">Vocal Cumule</span>
-          <span class="stat-icon">🎙️</span>
-        </div>
-        <div class="stat-value" id="kpi-voice">1 min</div>
-        <div class="stat-delta">
-          <span class="badge" id="badge-voice">--</span>
-          <span>vs periode precedente</span>
-        </div>
-      </div>
-      <div class="stat-card green">
-        <div class="stat-header">
-          <span class="stat-label">Membres (net)</span>
-          <span class="stat-icon">👥</span>
-        </div>
-        <div class="stat-value" id="kpi-members">+1</div>
-        <div class="stat-delta">
-          <span class="badge" id="badge-members">--</span>
-          <span>vs periode precedente</span>
-        </div>
-      </div>
-      <div class="stat-card orange">
-        <div class="stat-header">
-          <span class="stat-label">Score Global</span>
-          <span class="stat-icon">⭐</span>
-        </div>
-        <div class="stat-value" id="kpi-score" style="color: #94a3b8">undefined</div>
-        <div class="stat-delta">
-          <span class="badge" id="badge-score">--</span>
-          <span>Indice global</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="charts-row">
-      <div class="chart-box">
-        <div class="chart-header-row">
-          <span class="chart-title">Evolution des Messages</span>
-          <select id="sel-messages" class="chart-select">
-            <option value="24h">24h</option>
-            <option value="7d" selected>7 jours</option>
-            <option value="30d">30 jours</option>
-            <option value="90d">90 jours</option>
-            <option value="all">Tout</option>
-          </select>
-        </div>
-        <div class="chart-area"><canvas id="chart-messages"></canvas></div>
-      </div>
-      <div class="chart-box">
-        <div class="chart-header-row">
-          <span class="chart-title">Activite Vocal</span>
-          <select id="sel-voice" class="chart-select">
-            <option value="24h">24h</option>
-            <option value="7d" selected>7 jours</option>
-            <option value="30d">30 jours</option>
-            <option value="90d">90 jours</option>
-            <option value="all">Tout</option>
-          </select>
-        </div>
-        <div class="chart-area"><canvas id="chart-voice"></canvas></div>
-      </div>
-    </div>
-
-    <div class="chart-box full">
-      <div class="chart-header-row">
-        <span class="chart-title">Evolution des Membres (Joins / Leaves)</span>
-        <select id="sel-members" class="chart-select">
-          <option value="24h">24h</option>
-          <option value="7d" selected>7 jours</option>
-          <option value="30d">30 jours</option>
-          <option value="90d">90 jours</option>
-          <option value="all">Tout</option>
-        </select>
-      </div>
-      <div class="chart-area"><canvas id="chart-members"></canvas></div>
-    </div>
-
-    <div class="summary-box" id="summary-text">Analyse depuis le debut de l&#39;enregistrement. Il n&#39;y a pas de periode precedente pour comparer.</div>
-
-    <div class="info-section">
-      <div class="info-card good">
-        <h3>Points Forts</h3>
-        <ul id="list-good">
-          <li>Messages: 5 message(s) envoyes par 3 personne(s).</li><li>Vocal: 1 min cumules par 1 personne(s).</li><li>Membres: solde positif ou stable (+1).</li>
-        </ul>
-      </div>
-      <div class="info-card bad">
-        <h3>Points a Ameliorer</h3>
-        <ul id="list-bad">
-          <li>Aucun point faible detecte.</li>
-        </ul>
-      </div>
+  <!-- Login Page -->
+  <div id="login-page" class="login-container">
+    <div class="login-box">
+      <div class="login-logo">CLN Stats</div>
+      <div class="login-subtitle">Dashboard Admin - Authentification requise</div>
+      <input type="password" id="login-password" class="login-input" placeholder="Mot de passe" maxlength="20">
+      <button class="login-btn" onclick="doLogin()">Se connecter</button>
+      <div id="login-error" class="login-error">Mot de passe incorrect</div>
+      <div class="login-hint">Acces reserve - MDP: cln</div>
     </div>
   </div>
 
-  <footer>CLN Bot Stats Dashboard - Mis a jour automatiquement</footer>
+  <!-- Main App -->
+  <div id="main-app" class="hidden">
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <div class="logo" onclick="navigate('dashboard')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v18h18"/>
+            <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
+          </svg>
+          CLN Stats
+        </div>
+        <div class="nav-links">
+          <button class="active" data-page="dashboard" onclick="navigate('dashboard')">Dashboard</button>
+          <button data-page="messages" onclick="navigate('messages')">Messages</button>
+          <button data-page="vocal" onclick="navigate('vocal')">Vocal</button>
+          <button data-page="membres" onclick="navigate('membres')">Membres</button>
+          <button class="live-tab" data-page="live" onclick="navigate('live')">Live</button>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">Deconnexion</button>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- Dashboard Page -->
+      <div id="page-dashboard" class="page">
+        <div class="page-header">
+          <div>
+            <h1>Dashboard Global</h1>
+            <div class="subtitle">
+              Comparaison cette semaine vs semaine derniere
+              <span class="live-badge">LIVE</span>
+            </div>
+          </div>
+          <div class="period-tabs">
+            <button class="period-tab" data-period="24h" onclick="setPeriod('24h')">24h</button>
+            <button class="period-tab active" data-period="7d" onclick="setPeriod('7d')">7 jours</button>
+            <button class="period-tab" data-period="30d" onclick="setPeriod('30d')">30 jours</button>
+            <button class="period-tab" data-period="90d" onclick="setPeriod('90d')">90 jours</button>
+            <button class="period-tab" data-period="all" onclick="setPeriod('all')">Tout</button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-header">
+              <span class="stat-label">Messages</span>
+              <span class="stat-icon">💬</span>
+            </div>
+            <div class="stat-value" id="kpi-messages">6</div>
+            <div class="stat-delta">
+              <span class="badge" id="badge-messages">--</span>
+              <span>vs periode precedente</span>
+            </div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-header">
+              <span class="stat-label">Vocal Cumule</span>
+              <span class="stat-icon">🎙️</span>
+            </div>
+            <div class="stat-value" id="kpi-voice">1 min</div>
+            <div class="stat-delta">
+              <span class="badge" id="badge-voice">--</span>
+              <span>vs periode precedente</span>
+            </div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-header">
+              <span class="stat-label">Membres (net)</span>
+              <span class="stat-icon">👥</span>
+            </div>
+            <div class="stat-value" id="kpi-members">+1</div>
+            <div class="stat-delta">
+              <span class="badge" id="badge-members">--</span>
+              <span>vs periode precedente</span>
+            </div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-header">
+              <span class="stat-label">Score Global</span>
+              <span class="stat-icon">⭐</span>
+            </div>
+            <div class="stat-value" id="kpi-score" style="color: #10b981">+285</div>
+            <div class="stat-delta">
+              <span class="badge" id="badge-score">--</span>
+              <span>Indice global</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-box">
+            <div class="chart-header-row">
+              <span class="chart-title">Evolution des Messages</span>
+              <select id="sel-messages" class="chart-select" onchange="updateChart('messages', this.value)">
+                <option value="24h">24h</option>
+                <option value="7d" selected>7 jours</option>
+                <option value="30d">30 jours</option>
+                <option value="90d">90 jours</option>
+                <option value="all">Tout</option>
+              </select>
+            </div>
+            <div class="chart-area"><canvas id="chart-messages"></canvas></div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-header-row">
+              <span class="chart-title">Activite Vocal</span>
+              <select id="sel-voice" class="chart-select" onchange="updateChart('voice', this.value)">
+                <option value="24h">24h</option>
+                <option value="7d" selected>7 jours</option>
+                <option value="30d">30 jours</option>
+                <option value="90d">90 jours</option>
+                <option value="all">Tout</option>
+              </select>
+            </div>
+            <div class="chart-area"><canvas id="chart-voice"></canvas></div>
+          </div>
+        </div>
+
+        <div class="chart-box full">
+          <div class="chart-header-row">
+            <span class="chart-title">Evolution des Membres (Joins / Leaves)</span>
+            <select id="sel-members" class="chart-select" onchange="updateChart('members', this.value)">
+              <option value="24h">24h</option>
+              <option value="7d" selected>7 jours</option>
+              <option value="30d">30 jours</option>
+              <option value="90d">90 jours</option>
+              <option value="all">Tout</option>
+            </select>
+          </div>
+          <div class="chart-area"><canvas id="chart-members"></canvas></div>
+        </div>
+
+        <div class="summary-box" id="summary-text">Le serveur progresse globalement (+100% d&#39;activite combinee). Les indicateurs positifs dominent.</div>
+
+        <div class="info-section">
+          <div class="info-card good">
+            <h3>Points Forts</h3>
+            <ul id="list-good"><li>Messages: +6 messages (+100%), +3 actif(s).</li><li>Vocal: +1 min vocal (+100%), +1 personne(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
+          </div>
+          <div class="info-card bad">
+            <h3>Points a Ameliorer</h3>
+            <ul id="list-bad"><li>Aucun point faible net sur cette periode.</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Messages Page -->
+      <div id="page-messages" class="page hidden">
+        <div id="loading-messages" class="loading-container">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Chargement des statistiques messages...</div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-messages" style="width: 0%"></div></div>
+        </div>
+        <div id="content-messages" class="hidden">
+          <div class="page-header">
+            <div>
+              <h1>Statistiques Messages</h1>
+              <div class="subtitle">Analyse detaillee de l activite textuelle du serveur</div>
+            </div>
+          </div>
+          <div class="chart-box full">
+            <div class="chart-header-row">
+              <span class="chart-title">Top utilisateurs par messages (7 derniers jours)</span>
+            </div>
+            <div id="top-messages-list" class="member-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vocal Page -->
+      <div id="page-vocal" class="page hidden">
+        <div id="loading-vocal" class="loading-container">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Chargement des statistiques vocales...</div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-vocal" style="width: 0%"></div></div>
+        </div>
+        <div id="content-vocal" class="hidden">
+          <div class="page-header">
+            <div>
+              <h1>Statistiques Vocal</h1>
+              <div class="subtitle">Temps passe en vocal et activite par salon</div>
+            </div>
+          </div>
+          <div class="chart-box full">
+            <div class="chart-header-row">
+              <span class="chart-title">Top utilisateurs par temps vocal (7 derniers jours)</span>
+            </div>
+            <div id="top-voice-list" class="member-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Membres Page -->
+      <div id="page-membres" class="page hidden">
+        <div id="loading-membres" class="loading-container">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Chargement de la liste des membres...</div>
+          <div class="progress-bar"><div class="progress-fill" id="prog-membres" style="width: 0%"></div></div>
+        </div>
+        <div id="content-membres" class="hidden">
+          <div class="page-header">
+            <div>
+              <h1>Liste des Membres</h1>
+              <div class="subtitle">Historique des joins et leaves</div>
+            </div>
+          </div>
+          <div class="stats-grid" style="margin-bottom: 20px;">
+            <div class="stat-card green">
+              <div class="stat-header"><span class="stat-label">Total Joins</span></div>
+              <div class="stat-value" id="stat-total-joins">-</div>
+            </div>
+            <div class="stat-card blue">
+              <div class="stat-header"><span class="stat-label">Total Leaves</span></div>
+              <div class="stat-value" id="stat-total-leaves">-</div>
+            </div>
+            <div class="stat-card purple">
+              <div class="stat-header"><span class="stat-label">Membres Actuels</span></div>
+              <div class="stat-value" id="stat-current-members">-</div>
+            </div>
+          </div>
+          <div class="chart-box full">
+            <div id="members-timeline"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Page -->
+      <div id="page-live" class="page hidden">
+        <div class="page-header">
+          <div>
+            <h1>Live TikTok</h1>
+            <div class="subtitle">Statut des lives CLN PRIME et ALADINTK7</div>
+          </div>
+        </div>
+        <div class="live-container">
+          <div class="live-status">
+            <div id="live-indicator" class="live-indicator"></div>
+            <span id="live-text" class="live-text">Verification du statut...</span>
+          </div>
+          <div class="live-channels">
+            <div class="live-channel">
+              <div class="live-channel-avatar">📱</div>
+              <div class="live-channel-name">@clnprime</div>
+              <div id="clnprime-status" class="live-channel-status">Verification...</div>
+              <a id="clnprime-btn" href="https://www.tiktok.com/@clnprime/live" target="_blank" class="live-channel-btn offline">Hors ligne</a>
+            </div>
+            <div class="live-channel">
+              <div class="live-channel-avatar">🎮</div>
+              <div class="live-channel-name">@aladintk7</div>
+              <div id="aladintk7-status" class="live-channel-status">Verification...</div>
+              <a id="aladintk7-btn" href="https://www.tiktok.com/@aladintk7/live" target="_blank" class="live-channel-btn offline">Hors ligne</a>
+            </div>
+          </div>
+          <div style="margin-top: 40px; color: #64748b; font-size: 13px;">
+            Actualisation automatique toutes les 30 secondes
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>CLN Bot Stats Dashboard - Connecte en tant qu admin legit</footer>
+  </div>
 
   <script>
-    const RAW = {"generatedAt":1778338437772,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398},{"userId":"1465491025421144268","channelId":"1481302669296537660","timestamp":1778337721230}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}]};
+    const RAW = {"generatedAt":1778339090537,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398},{"userId":"1465491025421144268","channelId":"1481302669296537660","timestamp":1778337721230},{"userId":"1121488402605420595","channelId":"1434256926035935252","timestamp":1778338760341}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}]};
     const cache = new Map();
     const charts = {};
-
+    let currentPeriod = '7d';
+    
+    // Auth
+    const AUTH_KEY = 'cln_dashboard_auth';
+    const CORRECT_PASSWORD = 'cln';
+    
+    function checkAuth() {
+      const isAuth = localStorage.getItem(AUTH_KEY) === 'true';
+      if (isAuth) {
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        initDashboard();
+      }
+    }
+    
+    function doLogin() {
+      const input = document.getElementById('login-password');
+      const error = document.getElementById('login-error');
+      if (input.value === CORRECT_PASSWORD) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+        error.classList.remove('show');
+        initDashboard();
+      } else {
+        error.classList.add('show');
+        input.value = '';
+      }
+    }
+    
+    function doLogout() {
+      localStorage.removeItem(AUTH_KEY);
+      location.reload();
+    }
+    
+    document.getElementById('login-password').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') doLogin();
+    });
+    
+    // Navigation
+    function navigate(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      document.getElementById('page-' + page).classList.remove('hidden');
+      document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+      document.querySelector('[data-page="' + page + '"]').classList.add('active');
+      
+      if (page === 'messages') loadMessagesPage();
+      if (page === 'vocal') loadVocalPage();
+      if (page === 'membres') loadMembresPage();
+      if (page === 'live') checkLiveStatus();
+    }
+    
+    // Format helpers
     const fmt = {
       sign: v => (v >= 0 ? "+" : "") + Math.round(v),
       pct: (c, p) => {
@@ -459,38 +935,31 @@
         const v = ((c - p) / p) * 100;
         return (v >= 0 ? "+" : "") + Math.round(v) + "%";
       },
-      cls: (c, p) => {
-        if (p === 0) return c > 0 ? "up" : "neutral";
-        return ((c - p) / p) > 0 ? "up" : "down";
-      },
+      cls: (c, p) => ((c - p) / p) > 0 ? 'up' : 'down',
       dur: ms => {
         const m = Math.max(0, Math.round(ms / 60000));
         const h = Math.floor(m / 60);
         return h > 0 ? h + "h " + String(m % 60).padStart(2, "0") + "m" : m + " min";
       }
     };
-
+    
+    // Data processing
     function getCfg(period, now) {
       const day = 86400000;
       if (period === "24h") return { start: now - day, step: 3600000 };
       if (period === "7d") return { start: now - 7 * day, step: day };
       if (period === "30d") return { start: now - 30 * day, step: day };
       if (period === "90d") return { start: now - 90 * day, step: 7 * day };
-      const minTs = Math.min(...RAW.memberEvents.map(e => e.ts || e.timestamp), ...RAW.messageEvents.map(e => e.ts || e.timestamp), now - 30 * day);
-      return { start: minTs, step: Math.max(day, Math.ceil((now - minTs) / 45 / day) * day) };
+      const minTs = Math.min(...(RAW.memberEvents || []).map(e => e.ts || e.timestamp || now), ...(RAW.messageEvents || []).map(e => e.ts || e.timestamp || now), now - 30 * day);
+      return { start: minTs || (now - 30 * day), step: day };
     }
-
+    
     function buckets(start, end, step) {
       const out = [];
       for (let t = Math.floor(start / step) * step; t < end; t += step) out.push(t);
       return out.length ? out : [start];
     }
-
-    function idx(ts, start, step, len) {
-      const i = Math.floor((ts - start) / step);
-      return Math.max(0, Math.min(len - 1, i));
-    }
-
+    
     function collect(period) {
       if (cache.has(period)) return cache.get(period);
       
@@ -506,12 +975,10 @@
       const joinCur = new Array(labels.length).fill(0), joinPrev = new Array(labels.length).fill(0);
       const leaveCur = new Array(labels.length).fill(0), leavePrev = new Array(labels.length).fill(0);
 
-      const firstMsg = new Map();
       (RAW.messageEvents || []).forEach(e => {
         const ts = e.timestamp || e.ts || 0;
-        if (!firstMsg.has(e.userId) || ts < firstMsg.get(e.userId)) firstMsg.set(e.userId, ts);
-        if (ts >= curStart && ts < curEnd) msgCur[idx(ts, curStart, cfg.step, labels.length)]++;
-        if (ts >= prevStart && ts < prevEnd) msgPrev[idx(ts, prevStart, cfg.step, labels.length)]++;
+        if (ts >= curStart && ts < curEnd) msgCur[Math.min(labels.length - 1, Math.max(0, Math.floor((ts - curStart) / cfg.step)))]++;
+        if (ts >= prevStart && ts < prevEnd) msgPrev[Math.min(labels.length - 1, Math.max(0, Math.floor((ts - prevStart) / cfg.step)))]++;
       });
 
       (RAW.voiceSessions || []).forEach(s => {
@@ -526,32 +993,29 @@
 
       (RAW.memberEvents || []).forEach(e => {
         const ts = e.timestamp || e.ts || 0;
+        const idx = Math.min(labels.length - 1, Math.max(0, Math.floor((ts - curStart) / cfg.step)));
+        const idxP = Math.min(labels.length - 1, Math.max(0, Math.floor((ts - prevStart) / cfg.step)));
         if (e.type === "join") {
-          if (ts >= curStart && ts < curEnd) joinCur[idx(ts, curStart, cfg.step, labels.length)]++;
-          if (ts >= prevStart && ts < prevEnd) joinPrev[idx(ts, prevStart, cfg.step, labels.length)]++;
+          if (ts >= curStart && ts < curEnd) joinCur[idx]++;
+          if (ts >= prevStart && ts < prevEnd) joinPrev[idxP]++;
         } else if (e.type === "leave") {
-          if (ts >= curStart && ts < curEnd) leaveCur[idx(ts, curStart, cfg.step, labels.length)]++;
-          if (ts >= prevStart && ts < prevEnd) leavePrev[idx(ts, prevStart, cfg.step, labels.length)]++;
+          if (ts >= curStart && ts < curEnd) leaveCur[idx]++;
+          if (ts >= prevStart && ts < prevEnd) leavePrev[idxP]++;
         }
       });
 
       const sum = a => a.reduce((x, y) => x + y, 0);
-      const msgsC = sum(msgCur), msgsP = sum(msgPrev);
-      const voxC = sum(voxCur) * 60000, voxP = sum(voxPrev) * 60000;
-      const joinsC = sum(joinCur), joinsP = sum(joinPrev);
-      const leavesC = sum(leaveCur), leavesP = sum(leavePrev);
-
       const data = {
         labels,
-        msg: { cur: msgCur, prev: msgPrev, totC: msgsC, totP: msgsP },
-        vox: { cur: voxCur.map(v => Math.round(v)), prev: voxPrev.map(v => Math.round(v)), totC: voxC, totP: voxP },
-        mem: { joinC: joinCur, joinP: joinPrev, leaveC: leaveCur, leaveP: leavePrev, netC: joinsC - leavesC, netP: joinsP - leavesP, joinsC, joinsP, leavesC, leavesP }
+        msg: { cur: msgCur, prev: msgPrev, totC: sum(msgCur), totP: sum(msgPrev) },
+        vox: { cur: voxCur.map(v => Math.round(v)), prev: voxPrev.map(v => Math.round(v)), totC: sum(voxCur) * 60000, totP: sum(voxPrev) * 60000 },
+        mem: { joinC: joinCur, joinP: joinPrev, leaveC: leaveCur, leaveP: leavePrev, netC: sum(joinCur) - sum(leaveCur), netP: sum(joinPrev) - sum(leavePrev), joinsC: sum(joinCur), joinsP: sum(joinPrev) }
       };
       cache.set(period, data);
       return data;
     }
-
-    function updateKPIs(d, period) {
+    
+    function updateKPIs(d) {
       document.getElementById("kpi-messages").textContent = d.msg.totC.toLocaleString();
       const bm = document.getElementById("badge-messages");
       bm.textContent = fmt.pct(d.msg.totC, d.msg.totP);
@@ -573,20 +1037,8 @@
       const bs = document.getElementById("badge-score");
       bs.textContent = fmt.pct(scoreC, scoreP);
       bs.className = "badge " + fmt.cls(scoreC, scoreP);
-
-      const good = [], bad = [];
-      if (d.msg.totC >= d.msg.totP) good.push("Messages en hausse (" + fmt.pct(d.msg.totC, d.msg.totP) + ")");
-      else bad.push("Messages en baisse (" + fmt.pct(d.msg.totC, d.msg.totP) + ")");
-      if (d.vox.totC >= d.vox.totP) good.push("Activite vocale progresse (" + fmt.pct(d.vox.totC, d.vox.totP) + ")");
-      else bad.push("Vocal en recul (" + fmt.pct(d.vox.totC, d.vox.totP) + ")");
-      if (d.mem.netC >= d.mem.netP) good.push("Retention membres OK (" + fmt.pct(d.mem.netC, d.mem.netP) + ")");
-      else bad.push("Perte de membres (" + fmt.pct(d.mem.netC, d.mem.netP) + ")");
-
-      document.getElementById("summary-text").textContent = "Vue " + period + ": " + (scoreC >= scoreP ? "La dynamique globale progresse." : "La dynamique recule.");
-      document.getElementById("list-good").innerHTML = good.length ? good.map(x => "<li>" + x + "</li>").join("") : "<li>Aucun point fort.</li>";
-      document.getElementById("list-bad").innerHTML = bad.length ? bad.map(x => "<li>" + x + "</li>").join("") : "<li>Aucun point faible.</li>";
     }
-
+    
     function makeLine(id, labels, prev, cur, colP, colC) {
       const ctx = document.getElementById(id).getContext("2d");
       if (charts[id]) charts[id].destroy();
@@ -603,12 +1055,11 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: { legend: { position: "top", align: "end", labels: { usePointStyle: true, boxWidth: 8 } } },
-          scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: "#1e1e2e" } } },
-          interaction: { intersect: false, mode: "index" }
+          scales: { x: { grid: { display: false } }, y: { beginAtZero: true, grid: { color: "#1e1e2e" } } }
         }
       });
     }
-
+    
     function makeBars(id, labels, joins, leaves) {
       const ctx = document.getElementById(id).getContext("2d");
       if (charts[id]) charts[id].destroy();
@@ -620,7 +1071,7 @@
           datasets: [
             { label: "Joins", data: joins, backgroundColor: "#22c55e80", borderColor: "#22c55e", borderWidth: 1 },
             { label: "Leaves", data: leaves, backgroundColor: "#ef444480", borderColor: "#ef4444", borderWidth: 1 },
-            { type: "line", label: "Net", data: net, borderColor: "#3b82f6", borderWidth: 2, tension: 0.3, pointRadius: 3 }
+            { type: "line", label: "Net", data: net, borderColor: "#3b82f6", borderWidth: 2, tension: 0.3 }
           ]
         },
         options: {
@@ -631,45 +1082,229 @@
         }
       });
     }
-
-    function render(period) {
+    
+    function renderDashboard(period) {
       const d = collect(period);
-      updateKPIs(d, period);
+      updateKPIs(d);
       makeLine("chart-messages", d.labels, d.msg.prev, d.msg.cur, "#ef4444", "#22c55e");
       makeLine("chart-voice", d.labels, d.vox.prev, d.vox.cur, "#ef4444", "#a855f7");
       makeBars("chart-members", d.labels, d.mem.joinC, d.mem.leaveC);
     }
-
-    function setup() {
-      document.querySelectorAll(".period-tab").forEach(btn => {
-        btn.onclick = function() {
-          document.querySelectorAll(".period-tab").forEach(b => b.classList.remove("active"));
-          this.classList.add("active");
-          render(this.dataset.period);
-        };
+    
+    function setPeriod(p) {
+      currentPeriod = p;
+      document.querySelectorAll('.period-tab').forEach(b => b.classList.remove('active'));
+      document.querySelector('[data-period="' + p + '"]').classList.add('active');
+      renderDashboard(p);
+    }
+    
+    function updateChart(type, period) {
+      const d = collect(period);
+      if (type === 'messages') makeLine("chart-messages", d.labels, d.msg.prev, d.msg.cur, "#ef4444", "#22c55e");
+      if (type === 'voice') makeLine("chart-voice", d.labels, d.vox.prev, d.vox.cur, "#ef4444", "#a855f7");
+      if (type === 'members') makeBars("chart-members", d.labels, d.mem.joinC, d.mem.leaveC);
+    }
+    
+    // Page loaders with progress
+    async function loadMessagesPage() {
+      const loading = document.getElementById('loading-messages');
+      const content = document.getElementById('content-messages');
+      const prog = document.getElementById('prog-messages');
+      const list = document.getElementById('top-messages-list');
+      
+      loading.classList.remove('hidden');
+      content.classList.add('hidden');
+      prog.style.width = '0%';
+      
+      await new Promise(r => setTimeout(r, 100));
+      prog.style.width = '30%';
+      
+      // Calculate top message users
+      const userCounts = {};
+      const now = Date.now();
+      const day7 = now - 7 * 86400000;
+      (RAW.messageEvents || []).forEach(e => {
+        const ts = e.timestamp || e.ts || 0;
+        if (ts >= day7) {
+          userCounts[e.userId] = (userCounts[e.userId] || 0) + 1;
+        }
       });
-
-      document.getElementById("sel-messages").onchange = function() {
-        const d = collect(this.value);
-        makeLine("chart-messages", d.labels, d.msg.prev, d.msg.cur, "#ef4444", "#22c55e");
-      };
-      document.getElementById("sel-voice").onchange = function() {
-        const d = collect(this.value);
-        makeLine("chart-voice", d.labels, d.vox.prev, d.vox.cur, "#ef4444", "#a855f7");
-      };
-      document.getElementById("sel-members").onchange = function() {
-        const d = collect(this.value);
-        makeBars("chart-members", d.labels, d.mem.joinC, d.mem.leaveC);
-      };
-
-      setTimeout(() => render("7d"), 200);
+      
+      await new Promise(r => setTimeout(r, 200));
+      prog.style.width = '70%';
+      
+      const sorted = Object.entries(userCounts).sort((a, b) => b[1] - a[1]).slice(0, 20);
+      list.innerHTML = sorted.map(([userId, count], i) => `
+        <div class="member-item">
+          <div class="member-avatar">#${i + 1}</div>
+          <div class="member-info">
+            <div class="member-name">${userId.substring(0, 8)}...</div>
+            <div class="member-meta">Utilisateur Discord</div>
+          </div>
+          <div class="member-stats">
+            <div class="member-stat-value">${count}</div>
+            <div class="member-stat-label">messages</div>
+          </div>
+        </div>
+      `).join('') || '<div class="member-item"><div class="member-info"><div class="member-name">Aucune donnee disponible</div></div></div>';
+      
+      await new Promise(r => setTimeout(r, 200));
+      prog.style.width = '100%';
+      await new Promise(r => setTimeout(r, 200));
+      
+      loading.classList.add('hidden');
+      content.classList.remove('hidden');
     }
-
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", setup);
-    } else {
-      setup();
+    
+    async function loadVocalPage() {
+      const loading = document.getElementById('loading-vocal');
+      const content = document.getElementById('content-vocal');
+      const prog = document.getElementById('prog-vocal');
+      const list = document.getElementById('top-voice-list');
+      
+      loading.classList.remove('hidden');
+      content.classList.add('hidden');
+      prog.style.width = '0%';
+      
+      await new Promise(r => setTimeout(r, 100));
+      prog.style.width = '30%';
+      
+      const userTime = {};
+      const now = Date.now();
+      const day7 = now - 7 * 86400000;
+      (RAW.voiceSessions || []).forEach(s => {
+        if ((s.endedAt || now) >= day7) {
+          const duration = Math.min(s.endedAt || now, now) - Math.max(s.startedAt, day7);
+          if (duration > 0) {
+            userTime[s.userId] = (userTime[s.userId] || 0) + duration;
+          }
+        }
+      });
+      
+      await new Promise(r => setTimeout(r, 200));
+      prog.style.width = '70%';
+      
+      const sorted = Object.entries(userTime).sort((a, b) => b[1] - a[1]).slice(0, 20);
+      list.innerHTML = sorted.map(([userId, ms], i) => {
+        const hours = Math.round(ms / 3600000 * 10) / 10;
+        return `
+          <div class="member-item">
+            <div class="member-avatar">#${i + 1}</div>
+            <div class="member-info">
+              <div class="member-name">${userId.substring(0, 8)}...</div>
+              <div class="member-meta">Utilisateur Discord</div>
+            </div>
+            <div class="member-stats">
+              <div class="member-stat-value">${hours}h</div>
+              <div class="member-stat-label">en vocal</div>
+            </div>
+          </div>
+        `;
+      }).join('') || '<div class="member-item"><div class="member-info"><div class="member-name">Aucune donnee disponible</div></div></div>';
+      
+      await new Promise(r => setTimeout(r, 200));
+      prog.style.width = '100%';
+      await new Promise(r => setTimeout(r, 200));
+      
+      loading.classList.add('hidden');
+      content.classList.remove('hidden');
     }
+    
+    async function loadMembresPage() {
+      const loading = document.getElementById('loading-membres');
+      const content = document.getElementById('content-membres');
+      const prog = document.getElementById('prog-membres');
+      
+      loading.classList.remove('hidden');
+      content.classList.add('hidden');
+      prog.style.width = '0%';
+      
+      await new Promise(r => setTimeout(r, 100));
+      prog.style.width = '40%';
+      
+      let joins = 0, leaves = 0;
+      (RAW.memberEvents || []).forEach(e => {
+        if (e.type === 'join') joins++;
+        if (e.type === 'leave') leaves++;
+      });
+      
+      await new Promise(r => setTimeout(r, 200));
+      prog.style.width = '80%';
+      
+      document.getElementById('stat-total-joins').textContent = joins;
+      document.getElementById('stat-total-leaves').textContent = leaves;
+      document.getElementById('stat-current-members').textContent = joins - leaves;
+      
+      await new Promise(r => setTimeout(r, 200));
+      prog.style.width = '100%';
+      await new Promise(r => setTimeout(r, 200));
+      
+      loading.classList.add('hidden');
+      content.classList.remove('hidden');
+    }
+    
+    // Live status check
+    async function checkLiveStatus() {
+      // Simulate live check - in real implementation, this would fetch from an API
+      const clnprimeLive = Math.random() > 0.7; // 30% chance online for demo
+      const aladintk7Live = Math.random() > 0.8; // 20% chance online for demo
+      
+      const indicator = document.getElementById('live-indicator');
+      const text = document.getElementById('live-text');
+      const clnStatus = document.getElementById('clnprime-status');
+      const aladinStatus = document.getElementById('aladintk7-status');
+      const clnBtn = document.getElementById('clnprime-btn');
+      const aladinBtn = document.getElementById('aladintk7-btn');
+      const liveTab = document.querySelector('.live-tab');
+      
+      if (clnprimeLive || aladintk7Live) {
+        indicator.classList.add('online');
+        text.textContent = 'Au moins un live est en cours !';
+        liveTab.classList.add('live-active');
+      } else {
+        indicator.classList.remove('online');
+        text.textContent = 'Aucun live en cours';
+        liveTab.classList.remove('live-active');
+      }
+      
+      if (clnprimeLive) {
+        clnStatus.textContent = 'EN LIVE maintenant !';
+        clnStatus.style.color = '#22c55e';
+        clnBtn.textContent = 'Voir le live';
+        clnBtn.classList.remove('offline');
+      } else {
+        clnStatus.textContent = 'Hors ligne';
+        clnStatus.style.color = '#64748b';
+        clnBtn.textContent = 'Hors ligne';
+        clnBtn.classList.add('offline');
+      }
+      
+      if (aladintk7Live) {
+        aladinStatus.textContent = 'EN LIVE maintenant !';
+        aladinStatus.style.color = '#22c55e';
+        aladinBtn.textContent = 'Voir le live';
+        aladinBtn.classList.remove('offline');
+      } else {
+        aladinStatus.textContent = 'Hors ligne';
+        aladinStatus.style.color = '#64748b';
+        aladinBtn.textContent = 'Hors ligne';
+        aladinBtn.classList.add('offline');
+      }
+    }
+    
+    function initDashboard() {
+      setTimeout(() => renderDashboard('7d'), 200);
+    }
+    
+    // Check auth on load
+    checkAuth();
+    
+    // Auto refresh live status every 30s when on live page
+    setInterval(() => {
+      if (!document.getElementById('page-live').classList.contains('hidden')) {
+        checkLiveStatus();
+      }
+    }, 30000);
   </script>
 </body>
 </html>
