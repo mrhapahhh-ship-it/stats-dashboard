@@ -228,24 +228,37 @@
       background: #0a0a0a;
     }
     
-    /* Page Header */
+    /* Page Header - Modern */
     .page-header-bar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 40px;
+      align-items: flex-end;
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .page-title-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
     .page-title {
-      font-size: 32px;
+      font-size: 36px;
       font-weight: 700;
       color: #fafafa;
-      letter-spacing: -1px;
+      letter-spacing: -1.5px;
+      line-height: 1.2;
     }
     .page-subtitle {
       color: #737373;
-      font-size: 15px;
-      margin-top: 6px;
+      font-size: 16px;
       font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    .page-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
     .period-tabs {
       display: flex;
@@ -322,44 +335,60 @@
     .kpi-evolution {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       font-size: 14px;
-      color: #737373;
+      color: #a3a3a3;
+      margin-top: 4px;
     }
     .evolution-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 14px;
       font-weight: 600;
+      letter-spacing: 0.3px;
     }
     .evolution-badge.up {
-      background: rgba(34, 197, 94, 0.15);
-      color: #22c55e;
+      background: rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
     }
     .evolution-badge.down {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
     }
     .evolution-badge.neutral {
       background: #262626;
-      color: #737373;
+      color: #a3a3a3;
+      border: 1px solid #333;
     }
     .kpi-comparison {
-      margin-top: 16px;
+      margin-top: 20px;
       padding-top: 16px;
-      border-top: 1px solid #1a1a1a;
+      border-top: 1px solid #262626;
       font-size: 13px;
-      color: #525252;
+      color: #737373;
     }
     .kpi-comparison-item {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 6px;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 4px 0;
     }
     .kpi-comparison-item:last-child { margin-bottom: 0; }
+    .comparison-value {
+      font-weight: 600;
+    }
+    .comparison-value.positive {
+      color: #4ade80;
+    }
+    .comparison-value.negative {
+      color: #f87171;
+    }
     
     /* Chart Cards - Dark */
     .charts-section {
@@ -709,6 +738,225 @@
       font-weight: 700;
       color: #fafafa;
     }
+    
+    /* Members Page - Search & Profile */
+    .members-search-container {
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+    .search-wrapper {
+      position: relative;
+      max-width: 600px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #525252;
+      width: 20px;
+      height: 20px;
+    }
+    .members-search-input {
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      border-radius: 14px;
+      padding: 18px 24px 18px 56px;
+      font-size: 16px;
+      color: #fafafa;
+      font-family: 'Space Grotesk', sans-serif;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .members-search-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    .members-search-input::placeholder {
+      color: #525252;
+    }
+    .search-hint {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #525252;
+    }
+    
+    /* Member Profile Card */
+    .member-profile-card {
+      background: #141414;
+      border: 1px solid #1a1a1a;
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 32px;
+      display: none;
+    }
+    .member-profile-card.show {
+      display: block;
+      animation: slideDown 0.3s ease;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #262626;
+    }
+    .profile-avatar-large {
+      width: 100px;
+      height: 100px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .profile-avatar-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-info h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fafafa;
+      margin-bottom: 8px;
+    }
+    .profile-info .profile-id {
+      font-size: 14px;
+      color: #525252;
+      font-family: monospace;
+    }
+    .profile-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 1024px) { .profile-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .profile-stat-box {
+      background: #0f0f0f;
+      border: 1px solid #262626;
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .profile-stat-label {
+      font-size: 12px;
+      color: #737373;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .profile-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fafafa;
+    }
+    .profile-section {
+      margin-top: 24px;
+    }
+    .profile-section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #a3a3a3;
+      margin-bottom: 16px;
+    }
+    .profile-close-btn {
+      margin-left: auto;
+      background: #262626;
+      border: none;
+      color: #a3a3a3;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: all 0.2s;
+    }
+    .profile-close-btn:hover {
+      background: #333;
+      color: #fafafa;
+    }
+    
+    /* Search Results */
+    .search-results {
+      margin-top: 24px;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #262626;
+      border-radius: 14px;
+      background: #0f0f0f;
+      display: none;
+    }
+    .search-results.show {
+      display: block;
+    }
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+    .search-result-item:hover {
+      background: #1a1a1a;
+    }
+    .search-result-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #fff;
+      font-size: 16px;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .search-result-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .search-result-info {
+      flex: 1;
+    }
+    .search-result-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fafafa;
+      margin-bottom: 4px;
+    }
+    .search-result-meta {
+      font-size: 13px;
+      color: #525252;
+    }
+    .no-results {
+      padding: 24px;
+      text-align: center;
+      color: #525252;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -770,7 +1018,7 @@
       <!-- Dashboard Page -->
       <div id="page-dashboard" class="page">
         <div class="page-header-bar">
-          <div>
+          <div class="page-title-wrapper">
             <h1 class="page-title">Dashboard Global</h1>
             <div class="page-subtitle">Activité et résultats du serveur</div>
           </div>
@@ -788,16 +1036,16 @@
           <div class="kpi-card">
             <div class="kpi-label">Messages</div>
             <div class="kpi-value-row">
-              <div class="kpi-value" id="kpi-messages">6</div>
+              <div class="kpi-value" id="kpi-messages">7</div>
             </div>
             <div class="kpi-evolution">
-              <span class="evolution-badge up" id="badge-messages">↑ 600%</span>
+              <span class="evolution-badge up" id="badge-messages">↑ 700%</span>
               <span>vs période précédente</span>
             </div>
             <div class="kpi-comparison">
               <div class="kpi-comparison-item">
                 <span>N-1: 0</span>
-                <span style="color:#16a34a">+6</span>
+                <span class="comparison-value positive">+7</span>
               </div>
             </div>
           </div>
@@ -813,7 +1061,7 @@
             <div class="kpi-comparison">
               <div class="kpi-comparison-item">
                 <span>N-1: 0h</span>
-                <span style="color:#16a34a">+0.0h</span>
+                <span class="comparison-value positive">+0.0h</span>
               </div>
             </div>
           </div>
@@ -828,7 +1076,7 @@
             </div>
             <div class="kpi-comparison">
               <div class="kpi-comparison-item">
-                <span>Joins: 1 | Leaves: 0</span>
+                <span>Joins: <span class="comparison-value positive">1</span> | Leaves: <span class="comparison-value negative">0</span></span>
               </div>
             </div>
           </div>
@@ -904,7 +1152,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
               Points Forts
             </div>
-            <ul class="info-list" id="list-good"><li>Messages: +6 messages (+100%), +3 actif(s).</li><li>Vocal: +1 min vocal (+100%), +1 personne(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
+            <ul class="info-list" id="list-good"><li>Messages: +7 messages (+100%), +3 actif(s).</li><li>Vocal: +1 min vocal (+100%), +1 personne(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
           </div>
           <div class="info-card">
             <div class="info-card-title bad">
@@ -971,37 +1219,91 @@
       <!-- Membres Page -->
       <div id="page-membres" class="page hidden">
         <div class="page-header-bar">
-          <div>
-            <h1 class="page-title">Liste des Membres</h1>
-            <div class="page-subtitle">Historique des joins et leaves</div>
+          <div class="page-title-wrapper">
+            <h1 class="page-title">Recherche Membres</h1>
+            <div class="page-subtitle">Trouvez un membre par son pseudo Discord</div>
           </div>
         </div>
-        <div id="loading-membres" class="loading-container">
-          <div class="loading-spinner"></div>
-          <div class="loading-text">Chargement de la liste...</div>
-          <div id="error-membres" class="loading-error">Erreur de chargement. <a href="#" onclick="loadMembresPage()" style="color:#3b82f6">Réessayer</a></div>
+        
+        <!-- Search Section -->
+        <div class="members-search-container">
+          <div class="search-wrapper">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input 
+              type="text" 
+              id="member-search-input" 
+              class="members-search-input" 
+              placeholder="Rechercher un membre..." 
+              autocomplete="off"
+              oninput="handleMemberSearch(this.value)"
+            >
+            <div class="search-hint">Tapez au moins 2 caractères pour rechercher • Appuyez sur Entrée pour voir les détails</div>
+          </div>
+          
+          <!-- Search Results Dropdown -->
+          <div id="search-results" class="search-results"></div>
         </div>
-        <div id="content-membres" class="hidden">
-          <div class="stats-mini-grid" style="margin-bottom: 24px;">
-            <div class="stat-mini">
-              <div class="stat-mini-label">Total Joins</div>
-              <div class="stat-mini-value" id="stat-total-joins">-</div>
+        
+        <!-- Member Profile Card (Hidden by default) -->
+        <div id="member-profile-card" class="member-profile-card">
+          <div class="profile-header">
+            <div id="profile-avatar" class="profile-avatar-large"></div>
+            <div class="profile-info">
+              <h2 id="profile-username">Nom d'utilisateur</h2>
+              <div id="profile-id" class="profile-id">ID: ---</div>
             </div>
-            <div class="stat-mini">
-              <div class="stat-mini-label">Total Leaves</div>
-              <div class="stat-mini-value" id="stat-total-leaves">-</div>
+            <button class="profile-close-btn" onclick="closeProfile()">Fermer</button>
+          </div>
+          
+          <div class="profile-stats-grid">
+            <div class="profile-stat-box">
+              <div class="profile-stat-label">Messages</div>
+              <div id="profile-messages" class="profile-stat-value">0</div>
             </div>
-            <div class="stat-mini">
-              <div class="stat-mini-label">Membres Actuels</div>
-              <div class="stat-mini-value" id="stat-current-members">-</div>
+            <div class="profile-stat-box">
+              <div class="profile-stat-label">Temps Vocal</div>
+              <div id="profile-voice" class="profile-stat-value">0h</div>
+            </div>
+            <div class="profile-stat-box">
+              <div class="profile-stat-label">Join Date</div>
+              <div id="profile-join-date" class="profile-stat-value">---</div>
+            </div>
+            <div class="profile-stat-box">
+              <div class="profile-stat-label">Rôles</div>
+              <div id="profile-roles" class="profile-stat-value">---</div>
             </div>
           </div>
-          <div class="content-card">
-            <div class="content-card-header">
-              <div class="content-card-title">Liste complète des membres</div>
-            </div>
-            <div class="content-card-body" id="all-members-list" style="max-height: 600px; overflow-y: auto;"></div>
+          
+          <div class="profile-section">
+            <div class="profile-section-title">Activité récente</div>
+            <div id="profile-activity" style="color: #525252; font-size: 14px;">Aucune activité récente enregistrée</div>
           </div>
+        </div>
+        
+        <!-- Stats & List Section -->
+        <div class="stats-mini-grid" style="margin-bottom: 24px;">
+          <div class="stat-mini">
+            <div class="stat-mini-label">Total Joins</div>
+            <div class="stat-mini-value" id="stat-total-joins">-</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-label">Total Leaves</div>
+            <div class="stat-mini-value" id="stat-total-leaves">-</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-label">Membres Actuels</div>
+            <div class="stat-mini-value" id="stat-current-members">-</div>
+          </div>
+        </div>
+        
+        <div class="content-card">
+          <div class="content-card-header">
+            <div class="content-card-title">Tous les membres</div>
+          </div>
+          <div class="content-card-body" id="all-members-list" style="max-height: 400px; overflow-y: auto;"></div>
         </div>
       </div>
 
@@ -1052,7 +1354,7 @@
   </div>
 
   <script>
-    const RAW = {"generatedAt":1778348370435,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":4},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
+    const RAW = {"generatedAt":1778348838447,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341},{"userId":"1121488402605420595","username":"hapahhh.","avatarURL":"https://cdn.discordapp.com/avatars/1121488402605420595/8a518e6752da582ded1b4827bca3492b.webp?size=128","channelId":"1434256560548479138","channelName":"┃・📃・discussion","timestamp":1778348618596}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":5},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
     const cache = new Map();
     const charts = {};
     let currentPeriod = '7d';
@@ -1497,68 +1799,31 @@
     }
     
     async function loadMembresPage() {
-      const loading = document.getElementById('loading-membres');
-      const content = document.getElementById('content-membres');
-      const prog = document.getElementById('prog-membres');
       const memberListEl = document.getElementById('all-members-list');
-      const errorEl = document.getElementById('error-membres');
       
-      // Reset state
-      loading.classList.remove('hidden');
-      content.classList.add('hidden');
-      if (errorEl) errorEl.classList.remove('show');
-      if (prog) prog.style.width = '0%';
+      // Calculate and display stats
+      let joins = 0, leaves = 0;
+      (RAW.memberEvents || []).forEach(e => {
+        if (e.type === 'join') joins++;
+        if (e.type === 'leave') leaves++;
+      });
       
-      // Safety timeout
-      const timeoutId = setTimeout(() => {
-        if (errorEl) errorEl.classList.add('show');
-        if (prog) prog.style.width = '100%';
-      }, PAGE_LOAD_TIMEOUT);
+      const joinsEl = document.getElementById('stat-total-joins');
+      const leavesEl = document.getElementById('stat-total-leaves');
+      const currentEl = document.getElementById('stat-current-members');
+      if (joinsEl) joinsEl.textContent = joins;
+      if (leavesEl) leavesEl.textContent = leaves;
+      if (currentEl) currentEl.textContent = joins - leaves;
       
-      try {
-        await new Promise(r => setTimeout(r, 100));
-        if (prog) prog.style.width = '30%';
-        
-        // Calculate stats
-        let joins = 0, leaves = 0;
-        (RAW.memberEvents || []).forEach(e => {
-          if (e.type === 'join') joins++;
-          if (e.type === 'leave') leaves++;
-        });
-        
-        await new Promise(r => setTimeout(r, 150));
-        if (prog) prog.style.width = '60%';
-        
-        const joinsEl = document.getElementById('stat-total-joins');
-        const leavesEl = document.getElementById('stat-total-leaves');
-        const currentEl = document.getElementById('stat-current-members');
-        if (joinsEl) joinsEl.textContent = joins;
-        if (leavesEl) leavesEl.textContent = leaves;
-        if (currentEl) currentEl.textContent = joins - leaves;
-        
-        // Render member list with avatars
-        if (memberListEl) {
-          const members = RAW.memberList || [];
-          memberListEl.innerHTML = members.map((m, i) => {
-            const initials = (m.username ? m.username.substring(0,2).toUpperCase() : '??');
-            const avatar = m.avatarURL ? '<img src="' + m.avatarURL + '" style="width:40px;height:40px;border-radius:14px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#22c55e);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:14px;">' + initials + '</div>';
-            const joinDate = m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('fr-FR') : 'Inconnu';
-            return '<div class="list-item">' + avatar + '<div class="list-info"><div class="list-title">' + escapeHtml(m.username || 'Unknown') + '</div><div class="list-subtitle">ID: ' + (m.userId ? m.userId.substring(0,12) : '...') + ' - Join: ' + joinDate + '</div></div><div class="list-value"><div class="list-value-number">' + (m.userId ? m.userId.substring(0,6) : '') + '</div><div class="list-value-label">User ID</div></div></div>';
-          }).join('') || '<div class="list-item"><div class="list-info"><div class="list-title" style="color:#525252">Aucun membre trouvé</div></div></div>';
-        }
-        
-        await new Promise(r => setTimeout(r, 150));
-        if (prog) prog.style.width = '100%';
-        await new Promise(r => setTimeout(r, 150));
-        
-        clearTimeout(timeoutId);
-        loading.classList.add('hidden');
-        content.classList.remove('hidden');
-      } catch (err) {
-        clearTimeout(timeoutId);
-        console.error('Error loading membres page:', err);
-        if (errorEl) errorEl.classList.add('show');
-        if (prog) prog.style.width = '100%';
+      // Render member list with avatars
+      if (memberListEl) {
+        const members = RAW.memberList || [];
+        memberListEl.innerHTML = members.map((m, i) => {
+          const initials = (m.username ? m.username.substring(0,2).toUpperCase() : '??');
+          const avatar = m.avatarURL ? '<img src="' + m.avatarURL + '" style="width:40px;height:40px;border-radius:14px;object-fit:cover;">' : '<div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#3b82f6,#22c55e);display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff;font-size:14px;">' + initials + '</div>';
+          const joinDate = m.joinedAt ? new Date(m.joinedAt).toLocaleDateString('fr-FR') : 'Inconnu';
+          return '<div class="list-item" onclick="selectMember('' + m.userId + '')" style="cursor:pointer;">' + avatar + '<div class="list-info"><div class="list-title">' + escapeHtml(m.username || 'Unknown') + '</div><div class="list-subtitle">ID: ' + (m.userId ? m.userId.substring(0,12) : '...') + ' • Join: ' + joinDate + '</div></div><div class="list-value"><div class="list-value-number">' + (m.userId ? m.userId.substring(0,6) : '') + '</div><div class="list-value-label">User ID</div></div></div>';
+        }).join('') || '<div class="list-item"><div class="list-info"><div class="list-title" style="color:#525252">Aucun membre trouvé</div></div></div>';
       }
     }
     
@@ -1786,6 +2051,138 @@
     
     // Check auth on load
     checkAuth();
+    
+    // Member Search Functions
+    let selectedMember = null;
+    
+    function handleMemberSearch(query) {
+      const resultsContainer = document.getElementById('search-results');
+      
+      if (!query || query.length < 2) {
+        resultsContainer.classList.remove('show');
+        return;
+      }
+      
+      const members = RAW.memberList || [];
+      const filtered = members.filter(m => 
+        (m.username || '').toLowerCase().includes(query.toLowerCase()) ||
+        (m.userId || '').includes(query)
+      ).slice(0, 10);
+      
+      if (filtered.length === 0) {
+        resultsContainer.innerHTML = '<div class="no-results">Aucun membre trouvé</div>';
+      } else {
+        resultsContainer.innerHTML = filtered.map(m => {
+          const initials = (m.username ? m.username.substring(0,2).toUpperCase() : '??');
+          const avatar = m.avatarURL 
+            ? '<img src="' + m.avatarURL + '" style="width:100%;height:100%;object-fit:cover;">' 
+            : initials;
+          return '<div class="search-result-item" onclick="selectMember('' + m.userId + '')">' +
+            '<div class="search-result-avatar">' + avatar + '</div>' +
+            '<div class="search-result-info">' +
+              '<div class="search-result-name">' + escapeHtml(m.username || 'Unknown') + '</div>' +
+              '<div class="search-result-meta">ID: ' + (m.userId ? m.userId.substring(0,12) : '...') + '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+      
+      resultsContainer.classList.add('show');
+    }
+    
+    function selectMember(userId) {
+      const members = RAW.memberList || [];
+      const member = members.find(m => m.userId === userId);
+      if (!member) return;
+      
+      selectedMember = member;
+      
+      // Hide search results
+      document.getElementById('search-results').classList.remove('show');
+      document.getElementById('member-search-input').value = member.username || '';
+      
+      // Show profile card
+      const profileCard = document.getElementById('member-profile-card');
+      profileCard.classList.add('show');
+      
+      // Update profile info
+      document.getElementById('profile-username').textContent = member.username || 'Unknown';
+      document.getElementById('profile-id').textContent = 'ID: ' + (member.userId || '---');
+      
+      // Avatar
+      const avatarEl = document.getElementById('profile-avatar');
+      if (member.avatarURL) {
+        avatarEl.innerHTML = '<img src="' + member.avatarURL + '" style="width:100%;height:100%;object-fit:cover;">';
+      } else {
+        const initials = (member.username ? member.username.substring(0,2).toUpperCase() : '??');
+        avatarEl.textContent = initials;
+      }
+      
+      // Calculate stats
+      const msgCount = calculateMemberMessages(member.userId);
+      const voiceTime = calculateMemberVoiceTime(member.userId);
+      
+      document.getElementById('profile-messages').textContent = msgCount.toLocaleString();
+      document.getElementById('profile-voice').textContent = formatDuration(voiceTime);
+      document.getElementById('profile-join-date').textContent = member.joinedAt 
+        ? new Date(member.joinedAt).toLocaleDateString('fr-FR') 
+        : 'Inconnu';
+      document.getElementById('profile-roles').textContent = member.roles?.join(', ') || 'Aucun';
+      
+      // Recent activity
+      const activity = getMemberActivity(member.userId);
+      document.getElementById('profile-activity').textContent = activity || 'Aucune activité récente enregistrée';
+    }
+    
+    function closeProfile() {
+      document.getElementById('member-profile-card').classList.remove('show');
+      document.getElementById('member-search-input').value = '';
+      selectedMember = null;
+    }
+    
+    function calculateMemberMessages(userId) {
+      if (!userId) return 0;
+      const events = RAW.messageEvents || [];
+      return events.filter(e => e.userId === userId).length;
+    }
+    
+    function calculateMemberVoiceTime(userId) {
+      if (!userId) return 0;
+      const sessions = RAW.voiceSessions || [];
+      return sessions
+        .filter(s => s.userId === userId)
+        .reduce((total, s) => total + ((s.endedAt || Date.now()) - s.startedAt), 0);
+    }
+    
+    function formatDuration(ms) {
+      const hours = Math.floor(ms / 3600000);
+      const minutes = Math.floor((ms % 3600000) / 60000);
+      if (hours > 0) return hours + 'h ' + minutes + 'm';
+      return minutes + ' min';
+    }
+    
+    function getMemberActivity(userId) {
+      if (!userId) return null;
+      const events = RAW.memberEvents || [];
+      const userEvents = events.filter(e => e.userId === userId).slice(-3);
+      if (userEvents.length === 0) return null;
+      
+      return userEvents.map(e => {
+        const date = new Date(e.timestamp || e.ts).toLocaleDateString('fr-FR');
+        if (e.type === 'join') return '🟢 A rejoint le ' + date;
+        if (e.type === 'leave') return '🔴 A quitté le ' + date;
+        return '⚪ Événement le ' + date;
+      }).join(' • ');
+    }
+    
+    // Close search results when clicking outside
+    document.addEventListener('click', function(e) {
+      const searchContainer = document.querySelector('.members-search-container');
+      if (searchContainer && !searchContainer.contains(e.target)) {
+        const results = document.getElementById('search-results');
+        if (results) results.classList.remove('show');
+      }
+    });
     
     // Auto refresh live status every 30s when on live page
     setInterval(() => {
