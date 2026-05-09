@@ -1054,7 +1054,7 @@
   </div>
 
   <script>
-    const RAW = {"generatedAt":1778347326637,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":4},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
+    const RAW = {"generatedAt":1778347504751,"memberEvents":[{"type":"join","userId":"1502664708673503265","username":"Unknown","avatarURL":null,"timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279694235},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1480307780429545563","channelName":null,"timestamp":1778279695497},{"userId":"1416535043056074956","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778279840331},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1502671331706273802","channelName":null,"timestamp":1778335166398},{"userId":"1465491025421144268","username":"Unknown","avatarURL":null,"channelId":"1481302669296537660","channelName":null,"timestamp":1778337721230},{"userId":"1121488402605420595","username":"Unknown","avatarURL":null,"channelId":"1434256926035935252","channelName":null,"timestamp":1778338760341}],"voiceSessions":[{"userId":"1121488402605420595","channelId":"1491034253193117797","startedAt":1778338373996,"endedAt":1778338374676},{"userId":"1121488402605420595","channelId":"1502684815051194368","startedAt":1778338374676,"endedAt":1778338414984}],"topMessageUsers":[{"userId":"1121488402605420595","username":"Unknown","count":4},{"userId":"1416535043056074956","username":"Unknown","count":1},{"userId":"1465491025421144268","username":"Unknown","count":1}],"topVoiceUsers":[{"userId":"1121488402605420595","username":"Unknown","time":40988}],"topVoiceChannels":[{"channelId":"1502684815051194368","name":"Unknown","time":40308},{"channelId":"1491034253193117797","name":"Unknown","time":680}],"memberList":[{"userId":"1502664708673503265","username":"Unknown","joinedAt":1778333907101}],"liveHistory":[],"currentLive":{"clnprime":null,"aladintk7":null}};
     const cache = new Map();
     const charts = {};
     let currentPeriod = '7d';
@@ -1745,6 +1745,17 @@
     
     function initDashboard() {
       setTimeout(() => renderDashboard('7d'), 200);
+    }
+    
+    // Utility functions for client-side
+    function escapeHtml(text) {
+      if (text === null || text === undefined) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
     
     // Check auth on load
