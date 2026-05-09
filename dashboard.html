@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stats serveur - cette semaine</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, Segoe UI, Arial, sans-serif; background: radial-gradient(1200px 650px at 10% -10%, #1e293b 0%, #070b14 55%); color: #e2e8f0; }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 24px 18px 44px; }
+    .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; margin-bottom: 18px; }
+    .title { font-size: 28px; font-weight: 800; margin: 0 0 8px; }
+    .sub { color: #94a3b8; margin: 0; }
+    .filterBox { background: #0f172a; border: 1px solid #273449; border-radius: 12px; padding: 10px 12px; }
+    .filterBox label { font-size: 12px; color: #94a3b8; display: block; margin-bottom: 6px; }
+    .filterBox select { background: #020617; color: #e2e8f0; border: 1px solid #334155; border-radius: 8px; padding: 7px 10px; min-width: 160px; }
+    .grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+    .card { background: linear-gradient(180deg, #0f172a 0%, #0a1120 100%); border: 1px solid #223049; border-radius: 14px; padding: 14px; }
+    .k { color: #94a3b8; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+    .v { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .vs { color: #94a3b8; font-size: 12px; }
+    .score { color: #4ade80; }
+    h2 { margin: 24px 0 10px; font-size: 18px; }
+    ul { margin: 8px 0 0; padding-left: 18px; }
+    li { margin: 6px 0; }
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .charts { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
+    .chartCard { background: #0b1221; border: 1px solid #223049; border-radius: 14px; padding: 14px; min-height: 280px; }
+    .chartTitle { margin: 0 0 10px; font-size: 14px; font-weight: 700; color: #cbd5e1; }
+    .chartWrap { position: relative; width: 100%; height: 230px; }
+    .chartWrap > div { width: 100%; height: 100%; }
+    .muted { color: #94a3b8; }
+    .pill { display: inline-block; padding: 3px 8px; border-radius: 999px; background: #102036; color: #93c5fd; font-size: 11px; margin-left: 8px; }
+    @media (max-width: 980px) { .grid { grid-template-columns: 1fr 1fr; } .cols { grid-template-columns: 1fr; } .top { flex-direction: column; align-items: flex-start; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1 class="title">Dashboard global</h1>
+        <p class="sub">Comparaison cette semaine vs semaine derniere <span class="pill">auto live</span></p>
+      </div>
+      <div class="filterBox">
+        <label for="globalPeriodSelect">Duree KPIs globaux</label>
+        <select id="globalPeriodSelect">
+          <option value="24h">24h</option>
+          <option value="7d" selected>7 jours</option>
+          <option value="30d">30 jours</option>
+          <option value="90d">90 jours</option>
+          <option value="all">Tout l'historique</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="k">Messages</div><div class="v" id="kpiMessages">4</div><div class="vs" id="kpiMessagesDelta">--</div></div>
+      <div class="card"><div class="k">Vocal cumule</div><div class="v" id="kpiVoice">0 min</div><div class="vs" id="kpiVoiceDelta">--</div></div>
+      <div class="card"><div class="k">Membres (net)</div><div class="v" id="kpiMembers">+1</div><div class="vs" id="kpiMembersDelta">--</div></div>
+      <div class="card"><div class="k">Score global</div><div class="v score" id="kpiScore">+185</div><div class="vs" id="kpiScoreDelta">Le serveur progresse globalement (+100% d&#39;activite combinee). Les indicateurs positifs dominent.</div></div>
+    </div>
+
+    <div class="charts">
+      <div class="chartCard">
+        <h3 class="chartTitle">Messages: evolution actuelle vs precedente
+          <span style="float:right">
+            <select id="messagesPeriodSelect">
+              <option value="24h">24h</option>
+              <option value="7d" selected>7 jours</option>
+              <option value="30d">30 jours</option>
+              <option value="90d">90 jours</option>
+              <option value="all">Tout</option>
+            </select>
+          </span>
+        </h3>
+        <div class="chartWrap"><div id="messagesChart"></div></div>
+      </div>
+      <div class="chartCard">
+        <h3 class="chartTitle">Vocal: minutes par tranche
+          <span style="float:right">
+            <select id="voicePeriodSelect">
+              <option value="24h">24h</option>
+              <option value="7d" selected>7 jours</option>
+              <option value="30d">30 jours</option>
+              <option value="90d">90 jours</option>
+              <option value="all">Tout</option>
+            </select>
+          </span>
+        </h3>
+        <div class="chartWrap"><div id="voiceChart"></div></div>
+      </div>
+      <div class="chartCard">
+        <h3 class="chartTitle">Membres: joins / leaves / net
+          <span style="float:right">
+            <select id="membersPeriodSelect">
+              <option value="24h">24h</option>
+              <option value="7d" selected>7 jours</option>
+              <option value="30d">30 jours</option>
+              <option value="90d">90 jours</option>
+              <option value="all">Tout</option>
+            </select>
+          </span>
+        </h3>
+        <div class="chartWrap"><div id="membersChart"></div></div>
+      </div>
+    </div>
+
+    <h2>Analyse automatique</h2>
+    <div class="card" id="analysisSummary">Le serveur progresse globalement (+100% d&#39;activite combinee). Les indicateurs positifs dominent.</div>
+    <div class="cols">
+      <div class="card">
+        <div class="k">Points forts</div>
+        <ul id="strengthList"><li>Messages: +4 messages (+100%), +2 actif(s).</li><li>Membres: net membres +1 (+100%), +1 joins, +0 leaves.</li></ul>
+      </div>
+      <div class="card">
+        <div class="k">Points a ameliorer</div>
+        <ul id="weaknessList"><li>Aucun point faible net sur cette periode.</li></ul>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:12px">Inclut: delai moyen avant 1er message apres join, retention moyenne avant depart, activite par periode et comparaison complete.</p>
+  </div>
+  <script>
+    const RAW = {"generatedAt":1778337715315,"memberEvents":[{"type":"join","userId":"1502664708673503265","timestamp":1778333907101}],"messageEvents":[{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279694235},{"userId":"1121488402605420595","channelId":"1480307780429545563","timestamp":1778279695497},{"userId":"1416535043056074956","channelId":"1481302669296537660","timestamp":1778279840331},{"userId":"1121488402605420595","channelId":"1502671331706273802","timestamp":1778335166398}],"voiceSessions":[]};
+    const dataCache = new Map();
+
+    function formatSigned(v) { return (v >= 0 ? "+" : "") + Math.round(v); }
+    function pct(current, previous) {
+      if (previous === 0) return current === 0 ? 0 : 100;
+      return ((current - previous) / previous) * 100;
+    }
+    function fmtPct(current, previous) { const p = pct(current, previous); return (p >= 0 ? "+" : "") + Math.round(p) + "%"; }
+    function fmtDurationMs(ms) {
+      const mins = Math.max(0, Math.round(ms / 60000));
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return h > 0 ? h + "h " + String(m).padStart(2, "0") + "m" : m + " min";
+    }
+    function getPeriodCfg(period, now) {
+      const day = 86400000;
+      if (period === "24h") return { start: now - day, step: 3600000, label: "24h" };
+      if (period === "7d") return { start: now - 7 * day, step: day, label: "7j" };
+      if (period === "30d") return { start: now - 30 * day, step: day, label: "30j" };
+      if (period === "90d") return { start: now - 90 * day, step: 7 * day, label: "90j" };
+      const minTs = Math.min(...RAW.memberEvents.map((e) => e.timestamp), ...RAW.messageEvents.map((e) => e.timestamp), now - 30 * day);
+      const duration = Math.max(day, now - minTs);
+      return { start: minTs, step: Math.max(day, Math.ceil(duration / 45 / day) * day), label: "all" };
+    }
+    function buildBuckets(start, end, step) {
+      const out = [];
+      for (let t = Math.floor(start / step) * step; t < end; t += step) out.push(t);
+      return out.length ? out : [Math.floor(start / step) * step];
+    }
+    function indexFor(ts, start, step, len) {
+      const i = Math.floor((ts - start) / step);
+      return Math.max(0, Math.min(len - 1, i));
+    }
+    function collect(periodKey) {
+      const now = Date.now();
+      const cfg = getPeriodCfg(periodKey, now);
+      const currentStart = cfg.start;
+      const currentEnd = now;
+      const duration = currentEnd - currentStart;
+      const previousStart = currentStart - duration;
+      const previousEnd = currentStart;
+      const labelsTs = buildBuckets(currentStart, currentEnd, cfg.step);
+      const labels = labelsTs.map((t) => new Date(t).toLocaleString("fr-FR", cfg.step <= 3600000 ? { weekday: "short", hour: "2-digit" } : { day: "2-digit", month: "2-digit" }));
+
+      const msgCur = new Array(labels.length).fill(0);
+      const msgPrev = new Array(labels.length).fill(0);
+      const voiceCur = new Array(labels.length).fill(0);
+      const voicePrev = new Array(labels.length).fill(0);
+      const joinsCur = new Array(labels.length).fill(0);
+      const joinsPrev = new Array(labels.length).fill(0);
+      const leavesCur = new Array(labels.length).fill(0);
+      const leavesPrev = new Array(labels.length).fill(0);
+
+      const userFirstMsg = new Map();
+      RAW.messageEvents.forEach((e) => {
+        if (!userFirstMsg.has(e.userId) || e.timestamp < userFirstMsg.get(e.userId)) userFirstMsg.set(e.userId, e.timestamp);
+        if (e.timestamp >= currentStart && e.timestamp < currentEnd) msgCur[indexFor(e.timestamp, currentStart, cfg.step, labels.length)] += 1;
+        if (e.timestamp >= previousStart && e.timestamp < previousEnd) msgPrev[indexFor(e.timestamp, previousStart, cfg.step, labels.length)] += 1;
+      });
+
+      RAW.voiceSessions.forEach((s) => {
+        const toMin = (a, b, start, end) => Math.max(0, Math.min(b, end) - Math.max(a, start)) / 60000;
+        labelsTs.forEach((bucketStart, idx) => {
+          const bucketEnd = Math.min(currentEnd, bucketStart + cfg.step);
+          const prevBucketStart = previousStart + (bucketStart - currentStart);
+          const prevBucketEnd = Math.min(previousEnd, prevBucketStart + cfg.step);
+          voiceCur[idx] += toMin(s.startedAt, s.endedAt, bucketStart, bucketEnd);
+          voicePrev[idx] += toMin(s.startedAt, s.endedAt, prevBucketStart, prevBucketEnd);
+        });
+      });
+
+      RAW.memberEvents.forEach((e) => {
+        if (e.type === "join") {
+          if (e.timestamp >= currentStart && e.timestamp < currentEnd) joinsCur[indexFor(e.timestamp, currentStart, cfg.step, labels.length)] += 1;
+          if (e.timestamp >= previousStart && e.timestamp < previousEnd) joinsPrev[indexFor(e.timestamp, previousStart, cfg.step, labels.length)] += 1;
+        }
+        if (e.type === "leave") {
+          if (e.timestamp >= currentStart && e.timestamp < currentEnd) leavesCur[indexFor(e.timestamp, currentStart, cfg.step, labels.length)] += 1;
+          if (e.timestamp >= previousStart && e.timestamp < previousEnd) leavesPrev[indexFor(e.timestamp, previousStart, cfg.step, labels.length)] += 1;
+        }
+      });
+
+      const joinByUser = new Map();
+      const retentionDurations = [];
+      const firstMsgDelay = [];
+      const userEvents = RAW.memberEvents.slice().sort((a, b) => a.timestamp - b.timestamp);
+      for (const e of userEvents) {
+        if (!e.userId) continue;
+        if (e.type === "join") joinByUser.set(e.userId, e.timestamp);
+        if (e.type === "leave" && joinByUser.has(e.userId)) {
+          const joinTs = joinByUser.get(e.userId);
+          if (joinTs <= e.timestamp && joinTs >= currentStart && joinTs < currentEnd) {
+            retentionDurations.push(e.timestamp - joinTs);
+            const firstMsgTs = userFirstMsg.get(e.userId);
+            if (firstMsgTs && firstMsgTs >= joinTs) firstMsgDelay.push(firstMsgTs - joinTs);
+          }
+          joinByUser.delete(e.userId);
+        }
+      }
+
+      const sum = (arr) => arr.reduce((a, b) => a + b, 0);
+      const msgsCurrent = sum(msgCur);
+      const msgsPrev = sum(msgPrev);
+      const voiceCurrent = sum(voiceCur) * 60000;
+      const voicePrev = sum(voicePrev) * 60000;
+      const joinsCurrent = sum(joinsCur);
+      const joinsPrevious = sum(joinsPrev);
+      const leavesCurrent = sum(leavesCur);
+      const leavesPrevious = sum(leavesPrev);
+      const netCurrent = joinsCurrent - leavesCurrent;
+      const netPrevious = joinsPrevious - leavesPrevious;
+      const avgRetentionMs = retentionDurations.length ? retentionDurations.reduce((a, b) => a + b, 0) / retentionDurations.length : 0;
+      const avgFirstMsgMs = firstMsgDelay.length ? firstMsgDelay.reduce((a, b) => a + b, 0) / firstMsgDelay.length : 0;
+
+      return {
+        labels,
+        msgCur, msgPrev,
+        voiceCur: voiceCur.map((v) => Math.round(v)),
+        voicePrev: voicePrev.map((v) => Math.round(v)),
+        joinsCur, joinsPrev, leavesCur, leavesPrev,
+        totals: {
+          msgsCurrent, msgsPrev, voiceCurrent, voicePrev, netCurrent, netPrevious,
+          scoreCurrent: msgsCurrent + Math.round(voiceCurrent / 60000) + joinsCurrent,
+          scorePrevious: msgsPrev + Math.round(voicePrev / 60000) + joinsPrevious,
+          avgRetentionMs, avgFirstMsgMs,
+          joinsCurrent, joinsPrevious, leavesCurrent, leavesPrevious,
+        },
+      };
+    }
+    function getData(periodKey) {
+      if (!dataCache.has(periodKey)) {
+        dataCache.set(periodKey, collect(periodKey));
+      }
+      return dataCache.get(periodKey);
+    }
+    function updateKpis(data) {
+      const t = data.totals;
+      document.getElementById("kpiMessages").textContent = t.msgsCurrent;
+      document.getElementById("kpiMessagesDelta").textContent = "vs periode precedente: " + fmtPct(t.msgsCurrent, t.msgsPrev);
+      document.getElementById("kpiVoice").textContent = fmtDurationMs(t.voiceCurrent);
+      document.getElementById("kpiVoiceDelta").textContent = "vs periode precedente: " + fmtPct(t.voiceCurrent, t.voicePrev);
+      document.getElementById("kpiMembers").textContent = formatSigned(t.netCurrent);
+      document.getElementById("kpiMembersDelta").textContent = "vs periode precedente: " + fmtPct(t.netCurrent, t.netPrevious);
+      const scoreNow = t.scoreCurrent;
+      const scoreBefore = t.scorePrevious;
+      document.getElementById("kpiScore").textContent = formatSigned(scoreNow - scoreBefore) + " pts";
+      document.getElementById("kpiScoreDelta").textContent = "Indice global: " + fmtPct(scoreNow, scoreBefore);
+
+      const strengths = [];
+      const weaknesses = [];
+      const msgP = pct(t.msgsCurrent, t.msgsPrev);
+      const voiceP = pct(t.voiceCurrent, t.voicePrev);
+      const memberP = pct(t.netCurrent, t.netPrevious);
+      if (msgP >= 0) strengths.push("Messages en hausse (" + (msgP >= 0 ? "+" : "") + Math.round(msgP) + "%).");
+      else weaknesses.push("Messages en baisse (" + Math.round(msgP) + "%).");
+      if (voiceP >= 0) strengths.push("Activite vocale en progression (" + (voiceP >= 0 ? "+" : "") + Math.round(voiceP) + "%).");
+      else weaknesses.push("Temps vocal en recul (" + Math.round(voiceP) + "%).");
+      if (memberP >= 0) strengths.push("Retention membres correcte (" + (memberP >= 0 ? "+" : "") + Math.round(memberP) + "%).");
+      else weaknesses.push("Net membres negatif vs periode precedente (" + Math.round(memberP) + "%).");
+      if (t.avgRetentionMs > 0) strengths.push("Retention moyenne apres join: " + fmtDurationMs(t.avgRetentionMs) + ".");
+      if (t.avgFirstMsgMs > 0) strengths.push("Premier message apres join en moyenne: " + fmtDurationMs(t.avgFirstMsgMs) + ".");
+      if (t.avgFirstMsgMs > 0 && t.avgFirstMsgMs > 6 * 3600000) weaknesses.push("Onboarding lent: premier message tardif (" + fmtDurationMs(t.avgFirstMsgMs) + ").");
+
+      document.getElementById("analysisSummary").textContent = "Vue " + document.getElementById("globalPeriodSelect").value + ": " + (scoreNow >= scoreBefore ? "la dynamique globale progresse." : "la dynamique globale recule.");
+      document.getElementById("strengthList").innerHTML = strengths.length ? strengths.map((s) => "<li>" + s + "</li>").join("") : "<li>Aucun point fort detecte.</li>";
+      document.getElementById("weaknessList").innerHTML = weaknesses.length ? weaknesses.map((s) => "<li>" + s + "</li>").join("") : "<li>Aucun point faible detecte.</li>";
+    }
+    function polylinePoints(values, w, h, maxValue) {
+      return values.map((value, idx) => {
+        const x = (idx / Math.max(1, values.length - 1)) * w;
+        const y = h - (Math.max(0, value) / Math.max(1, maxValue)) * h;
+        return x.toFixed(2) + "," + y.toFixed(2);
+      }).join(" ");
+    }
+    function drawLineChartSvg(targetId, labels, prev, curr, prevColor, currColor) {
+      const host = document.getElementById(targetId);
+      const w = host.clientWidth || 860;
+      const h = host.clientHeight || 230;
+      const pad = 18;
+      const iw = Math.max(100, w - pad * 2);
+      const ih = Math.max(80, h - pad * 2);
+      const maxValue = Math.max(1, ...prev, ...curr);
+      const prevPts = polylinePoints(prev, iw, ih, maxValue);
+      const currPts = polylinePoints(curr, iw, ih, maxValue);
+      const xTicks = Math.min(8, labels.length);
+      const tickItems = Array.from({ length: xTicks }, (_, i) => {
+        const idx = Math.round((i / Math.max(1, xTicks - 1)) * (labels.length - 1));
+        const x = pad + (idx / Math.max(1, labels.length - 1)) * iw;
+        return '<text x="' + x.toFixed(1) + '" y="' + (h - 4) + '" fill="#7f8ca3" font-size="10" text-anchor="middle">' + labels[idx] + '</text>';
+      }).join("");
+      host.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
+        '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="transparent"/>' +
+        '<g transform="translate(' + pad + ',' + pad + ')">' +
+        '<polyline fill="none" stroke="' + prevColor + '" stroke-width="2.4" points="' + prevPts + '"></polyline>' +
+        '<polyline fill="none" stroke="' + currColor + '" stroke-width="2.4" points="' + currPts + '"></polyline>' +
+        '</g>' +
+        tickItems +
+        '</svg>';
+    }
+    function drawMembersChartSvg(targetId, labels, joins, leaves) {
+      const host = document.getElementById(targetId);
+      const w = host.clientWidth || 860;
+      const h = host.clientHeight || 230;
+      const pad = 18;
+      const iw = Math.max(100, w - pad * 2);
+      const ih = Math.max(80, h - pad * 2);
+      const net = joins.map((v, i) => v - leaves[i]);
+      const maxValue = Math.max(1, ...joins, ...leaves, ...net.map((v) => Math.abs(v)));
+      const colW = iw / Math.max(1, labels.length);
+      const bars = labels.map((_, i) => {
+        const baseX = pad + i * colW;
+        const jh = (Math.max(0, joins[i]) / maxValue) * ih;
+        const lh = (Math.max(0, leaves[i]) / maxValue) * ih;
+        return '<rect x="' + (baseX + colW * 0.15) + '" y="' + (pad + ih - jh) + '" width="' + (colW * 0.28) + '" height="' + jh + '" fill="rgba(74,222,128,0.75)"></rect>' +
+               '<rect x="' + (baseX + colW * 0.57) + '" y="' + (pad + ih - lh) + '" width="' + (colW * 0.28) + '" height="' + lh + '" fill="rgba(239,68,68,0.75)"></rect>';
+      }).join("");
+      const netPts = net.map((value, i) => {
+        const x = pad + (i / Math.max(1, labels.length - 1)) * iw;
+        const y = pad + ih - ((value + maxValue) / (2 * maxValue)) * ih;
+        return x.toFixed(2) + "," + y.toFixed(2);
+      }).join(" ");
+      host.innerHTML = '<svg width="100%" height="100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
+        '<rect x="0" y="0" width="' + w + '" height="' + h + '" fill="transparent"/>' +
+        bars +
+        '<polyline fill="none" stroke="#60a5fa" stroke-width="2.2" points="' + netPts + '"></polyline>' +
+        '</svg>';
+    }
+    function renderKpis(periodKey) {
+      const data = getData(periodKey);
+      updateKpis(data);
+    }
+    function renderMessages(periodKey) {
+      const data = getData(periodKey);
+      drawLineChartSvg("messagesChart", data.labels, data.msgPrev, data.msgCur, "#ef4444", "#4ade80");
+    }
+    function renderVoice(periodKey) {
+      const data = getData(periodKey);
+      drawLineChartSvg("voiceChart", data.labels, data.voicePrev, data.voiceCur, "#ef4444", "#4ade80");
+    }
+    function renderMembers(periodKey) {
+      const data = getData(periodKey);
+      drawMembersChartSvg("membersChart", data.labels, data.joinsCur, data.leavesCur);
+    }
+    document.getElementById("globalPeriodSelect").addEventListener("change", (e) => renderKpis(e.target.value));
+    document.getElementById("messagesPeriodSelect").addEventListener("change", (e) => renderMessages(e.target.value));
+    document.getElementById("voicePeriodSelect").addEventListener("change", (e) => renderVoice(e.target.value));
+    document.getElementById("membersPeriodSelect").addEventListener("change", (e) => renderMembers(e.target.value));
+    renderKpis("7d");
+    renderMessages("7d");
+    renderVoice("7d");
+    renderMembers("7d");
+  </script>
+</body>
+</html>
